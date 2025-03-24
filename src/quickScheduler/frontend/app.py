@@ -119,7 +119,7 @@ class FrontEnd:
             total_pages = (total_jobs + limit - 1) // limit
             return self.templates.TemplateResponse("job_history_all.html", {
                 "request": request,
-                "jobs": sorted(jobs, key=lambda job: job['end_time']),
+                "jobs": sorted(jobs, key=lambda job: job['end_time'], reverse = True),
                 "current_page": page,
                 "total_pages": total_pages
             })
@@ -231,7 +231,7 @@ class FrontEnd:
             return self.templates.TemplateResponse("job_history.html", {
                 "request": request,
                 "task": task,
-                "jobs": sorted(jobs, key=lambda job: job['end_time']),
+                "jobs": sorted(jobs, key=lambda job: job['end_time'], reverse = True),
                 "current_page": page,
                 "total_pages": total_pages
             })

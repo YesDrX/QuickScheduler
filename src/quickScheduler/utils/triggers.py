@@ -90,7 +90,7 @@ class TriggerConfig(BaseModel):
     @field_validator('dates', mode='before')
     @classmethod
     def parse_dates_field(cls, v):
-        return [parse_date(date_str) for date_str in v]
+        return [parse_date(date_str) if isinstance(date_str, str) else date_str for date_str in v]
     
     def get_dates(self):
         rst = getattr(self, "dates", None)
@@ -246,36 +246,47 @@ class IntervalTrigger(BaseTrigger):
         # Find the next valid date according to weekdays filter
         current_date = now_local.date()
         max_days_to_check = 366  # Check up to a year ahead
-        
+        config_dates = self.config.get_dates()
+
+        valid_date = False
         for _ in range(max_days_to_check):
-            # Check if the day of the week is in the allowed weekdays
-            weekday = current_date.isoweekday()  # 1 for Monday, 7 for Sunday
+            weekday = current_date.isoweekday()
+            valid_date = (config_dates is None or current_date in config_dates) and weekday in self.config.weekdays
+            if valid_date: break
+            current_date += timedelta(days=1)
+        if not valid_date: return None
+
+        # Create datetime objects for today's start and end times
+        for _ in range(max_days_to_check):
+            weekday = current_date.isoweekday()
+            valid_date = (config_dates is None or current_date in config_dates) and weekday in self.config.weekdays
+            if not valid_date:
+                current_date += timedelta(days=1)
+                continue
             
-            if weekday in self.config.weekdays:
-                # Create datetime objects for today's start and end times
-                start_dt_local = datetime.combine(current_date, self.config.start_time)
-                start_dt_local = tz.localize(start_dt_local)
-                end_dt_local = datetime.combine(current_date, self.config.end_time)
-                end_dt_local = tz.localize(end_dt_local)
-                
-                # If we're before the start time, return the start time
-                if now_local < start_dt_local:
-                    return start_dt_local.astimezone(pytz.UTC)
-                
-                # If we're between start and end time, find the next interval
-                if now_local < end_dt_local:
-                    # Calculate how many intervals have passed
-                    time_since_start = now_local - start_dt_local
-                    intervals_passed = time_since_start // self.config.interval
-                    next_interval = intervals_passed + 1
-                    
-                    # Calculate the next run time
-                    next_run_local = start_dt_local + (next_interval * self.config.interval)
-                    
-                    # If the next run is still before the end time, return it
-                    if next_run_local <= end_dt_local:
-                        return next_run_local.astimezone(pytz.UTC)
+            start_dt_local = datetime.combine(current_date, self.config.start_time)
+            start_dt_local = tz.localize(start_dt_local)
+            end_dt_local   = datetime.combine(current_date, self.config.end_time)
+            end_dt_local   = tz.localize(end_dt_local)
             
+            # If we're before the start time, return the start time
+            if now_local < start_dt_local:
+                return start_dt_local.astimezone(pytz.UTC)
+            
+            # If we're between start and end time, find the next interval
+            if now_local < end_dt_local:
+                # Calculate how many intervals have passed
+                time_since_start = now_local - start_dt_local
+                intervals_passed = time_since_start // self.config.interval
+                next_interval    = intervals_passed + 1
+                
+                # Calculate the next run time
+                next_run_local   = start_dt_local + (next_interval * self.config.interval)
+                
+                # If the next run is still before the end time, return it
+                if next_run_local <= end_dt_local:
+                    return next_run_local.astimezone(pytz.UTC)
+                
             # Move to the next day
             current_date += timedelta(days=1)
         

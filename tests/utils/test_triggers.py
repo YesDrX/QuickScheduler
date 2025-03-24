@@ -48,6 +48,16 @@ def interval_config(utc_timezone):
         interval=timedelta(hours=1)  # Every hour
     )
 
+@pytest.fixture
+def interval_config_with_dates(utc_timezone):
+    return TriggerConfig(
+        timezone=utc_timezone,
+        start_time=time(9, 0, 0),  # 9 AM
+        end_time=time(17, 0, 0),   # 5 PM
+        interval=timedelta(hours=1),  # Every hour
+        dates=[date(2023, 1, 1), date(2023, 1, 3)]
+    )
+
 
 @pytest.fixture
 def weekday_config(utc_timezone):
@@ -203,12 +213,13 @@ class TestDailyTrigger:
         
         # Get today's date
         today = date.today()
-        
+        now = datetime.combine(today, time(10, 0, 0), tzinfo = pytz.UTC)
+        run_time = datetime.combine(today, time(12, 0, 0), tzinfo = pytz.UTC)
+        assert trigger.should_run(run_time, now) is True
+
         # Test with a date not in the allowed dates
         invalid_date = today + timedelta(days=2)  # Not in the dates list
-        now = datetime.combine(invalid_date, time(10, 0, 0))
-        now = pytz.UTC.localize(now)
-        
+        now = datetime.combine(invalid_date, time(10, 0, 0), tzinfo = pytz.UTC)
         next_run = trigger.get_next_run(now)
         
         # Should skip to the next valid date (today + 7 days)
@@ -384,3 +395,42 @@ class TestIntervalTrigger:
         outside_time = datetime.combine(current_date, time(8, 0, 0), tzinfo=pytz.UTC)  # 8 AM
         now_time = datetime.combine(current_date, time(9, 30, 0), tzinfo=pytz.UTC)  # 9:30 AM
         assert trigger.should_run(outside_time) is False
+
+class TestIntervalTriggerWithDates:
+    def test_get_next_run_before_start(self, interval_config_with_dates):
+        trigger = IntervalTrigger(TriggerType.INTERVAL, interval_config_with_dates)
+        
+        # Test with a time after the end time
+        now = datetime(2023, 1, 1, 8, 0, 0, tzinfo=pytz.UTC)  # 6 PM (after 5 PM)
+        next_run = trigger.get_next_run(now)
+        
+        expected = datetime(2023, 1, 1, 9, 0, 0, tzinfo=pytz.UTC)  # 9 AM next day
+        assert next_run == expected
+    
+    def test_get_next_run_after_start_before_end(self, interval_config_with_dates):
+        trigger = IntervalTrigger(TriggerType.INTERVAL, interval_config_with_dates)
+        
+        # Test with a time after the end time
+        now = datetime(2023, 1, 1, 10, 0, 0, tzinfo=pytz.UTC)  # 6 PM (after 5 PM)
+        next_run = trigger.get_next_run(now)
+        expected = datetime(2023, 1, 1, 11, 0, 0, tzinfo=pytz.UTC)  # 9 AM next day
+        assert next_run == expected
+
+        now = datetime(2023, 1, 1, 9, 59, 30, tzinfo=pytz.UTC)  # 6 PM (after 5 PM)
+        next_run = trigger.get_next_run(now)
+        expected = datetime(2023, 1, 1, 10, 0, 0, tzinfo=pytz.UTC)  # 9 AM next day
+        assert next_run == expected
+
+    def test_get_next_run_after_end(self, interval_config_with_dates):
+        trigger = IntervalTrigger(TriggerType.INTERVAL, interval_config_with_dates)
+        
+        # Test with a time after the end time
+        now = datetime(2023, 1, 1, 18, 0, 0, tzinfo=pytz.UTC)  # 6 PM (after 5 PM)
+        next_run = trigger.get_next_run(now)
+        
+        expected = datetime(2023, 1, 3, 9, 0, 0, tzinfo=pytz.UTC)  # 9 AM next day
+        assert next_run == expected
+
+        now = datetime(2023, 1, 3, 18, 0, 0, tzinfo=pytz.UTC)  # 6 PM (after 5 PM)
+        next_run = trigger.get_next_run(now)
+        assert next_run is None

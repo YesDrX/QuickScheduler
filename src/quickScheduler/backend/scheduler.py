@@ -160,6 +160,7 @@ class Scheduler:
             else:
                 self.task_triggers[task.hash_id] = (task, trigger)
         
+        system_start_time = datetime.now(pytz.UTC)
         count = 0
         while True:
             try:
@@ -168,8 +169,10 @@ class Scheduler:
 
                 # Check and execute due tasks
                 for task_hash_id, (task, trigger) in self.task_triggers.items():
-                    previous_trigger_time = self.previous_trigger_time.get(task_hash_id, None)
-                    if trigger.should_run(now) and (previous_trigger_time is None or not trigger.should_run(previous_trigger_time)):
+                    previous_trigger_time = self.previous_trigger_time.get(task_hash_id, system_start_time)
+                    next_run = trigger.get_next_run(previous_trigger_time)
+                    if next_run and next_run <= now and abs((next_run - now).total_seconds()) < 5:
+                        logging.info(f"task={task.name}, previous_trigger_time={previous_trigger_time}, next_run={next_run}, now={now}")
                         self._trigger_task(task)
 
                 # Sleep briefly to prevent excessive CPU usage

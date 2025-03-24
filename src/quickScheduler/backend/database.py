@@ -5,8 +5,7 @@ backend. It includes models for Tasks and Jobs, along with database initializati
 and session management functionality.
 """
 from typing import Optional, List
-from regex import F
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import create_engine, inspect, text, desc, asc
 from sqlalchemy.pool import NullPool
 from sqlalchemy.orm import sessionmaker, Session
 
@@ -121,7 +120,7 @@ class Database:
         Returns:
             List of tasks
         """
-        return session.query(TaskModel).offset(skip).limit(limit).all()
+        return session.query(TaskModel).order_by(desc(TaskModel.updated_at), asc(TaskModel.name)).offset(skip).limit(limit).all()
 
     def get_job_by_id(self, session: Session, job_id: int) -> Optional[JobModel]:
         """Get a job by its ID.
@@ -146,7 +145,7 @@ class Database:
         Returns:
             List of jobs
         """
-        return session.query(JobModel).offset(skip).limit(limit).all()
+        return session.query(JobModel).order_by(desc(JobModel.end_time)).offset(skip).limit(limit).all()
 
     def get_jobs_by_task_hash_id(self, session: Session, task_hash_id: str, skip: int = 0, limit: int = 100) -> List[JobModel]:
         """Get a list of jobs for a specific task.
@@ -160,4 +159,4 @@ class Database:
         Returns:
             List of jobs for the specified task
         """
-        return session.query(JobModel).filter(JobModel.task_hash_id == task_hash_id).offset(skip).limit(limit).all()
+        return session.query(JobModel).filter(JobModel.task_hash_id == task_hash_id).order_by(desc(JobModel.end_time)).offset(skip).limit(limit).all()
