@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QuickScheduler{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .theme-icon {
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+<body>
+    <nav class="navbar navbar-expand-lg" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">QuickScheduler</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tasks">Tasks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs">Job History</a>
+                    </li>
+                </ul>
+                <div class="ms-auto">
+                    <button class="btn btn-link nav-link px-3 py-2" onclick="toggleTheme()" id="themeToggle">
+                        <i class="bi bi-sun-fill theme-icon" id="themeIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script>
+        function updateNavbarTheme(theme) {
+            const navbar = document.getElementById('mainNav');
+            if (theme === 'light') {
+                navbar.classList.remove('navbar-dark', 'bg-dark');
+                navbar.classList.add('navbar-light', 'bg-light');
+            } else {
+                navbar.classList.remove('navbar-light', 'bg-light');
+                navbar.classList.add('navbar-dark', 'bg-dark');
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            const currentTheme = html.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-bs-theme', newTheme);
+            themeIcon.className = `bi bi-${newTheme === 'light' ? 'sun' : 'moon'}-fill theme-icon`;
+            updateNavbarTheme(newTheme);
+            
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // Apply saved theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            document.getElementById('themeIcon').className = 
+                `bi bi-${savedTheme === 'light' ? 'sun' : 'moon'}-fill theme-icon`;
+            updateNavbarTheme(savedTheme);
+        });
+    </script>
+
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,727 @@
+[
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "tempfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tempfile",
+        "description": "tempfile",
+        "detail": "tempfile",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "dill",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "dill",
+        "description": "dill",
+        "detail": "dill",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "pendulum",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pendulum",
+        "description": "pendulum",
+        "detail": "pendulum",
+        "documentation": {}
+    },
+    {
+        "label": "croniter",
+        "importPath": "croniter",
+        "description": "croniter",
+        "isExtraImport": true,
+        "detail": "croniter",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "YAML",
+        "importPath": "ruamel.yaml",
+        "description": "ruamel.yaml",
+        "isExtraImport": true,
+        "detail": "ruamel.yaml",
+        "documentation": {}
+    },
+    {
+        "label": "YamlConfig",
+        "importPath": "src.utils.yaml_config",
+        "description": "src.utils.yaml_config",
+        "isExtraImport": true,
+        "detail": "src.utils.yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "YamlConfig",
+        "importPath": "src.utils.yaml_config",
+        "description": "src.utils.yaml_config",
+        "isExtraImport": true,
+        "detail": "src.utils.yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "YamlConfig",
+        "importPath": "src.utils.yaml_config",
+        "description": "src.utils.yaml_config",
+        "isExtraImport": true,
+        "detail": "src.utils.yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "LogFileMonitor",
+        "importPath": "src.utils.log_monitor",
+        "description": "src.utils.log_monitor",
+        "isExtraImport": true,
+        "detail": "src.utils.log_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "pytest",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pytest",
+        "description": "pytest",
+        "detail": "pytest",
+        "documentation": {}
+    },
+    {
+        "label": "SubProcessRunner",
+        "importPath": "src.utils.subprocess_runner",
+        "description": "src.utils.subprocess_runner",
+        "isExtraImport": true,
+        "detail": "src.utils.subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "Trigger",
+        "importPath": "src.utils.triggers",
+        "description": "src.utils.triggers",
+        "isExtraImport": true,
+        "detail": "src.utils.triggers",
+        "documentation": {}
+    },
+    {
+        "label": "OnStartTrigger",
+        "importPath": "src.utils.triggers",
+        "description": "src.utils.triggers",
+        "isExtraImport": true,
+        "detail": "src.utils.triggers",
+        "documentation": {}
+    },
+    {
+        "label": "LogFileMonitor",
+        "kind": 6,
+        "importPath": "src.utils.log_monitor",
+        "description": "src.utils.log_monitor",
+        "peekOfCode": "class LogFileMonitor:\n    \"\"\"A class to monitor log file changes and retrieve content updates.\n    This class provides functionality to:\n    - Monitor log files for new content\n    - Get content updates on demand via get() method\n    - Handle file rotation and truncation\n    - Support different line buffering modes\n    \"\"\"\n    def __init__(self, log_file: str, from_start: bool = False):\n        \"\"\"Initialize the LogFileMonitor.",
+        "detail": "src.utils.log_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "SubProcessRunner",
+        "kind": 6,
+        "importPath": "src.utils.subprocess_runner",
+        "description": "src.utils.subprocess_runner",
+        "peekOfCode": "class SubProcessRunner:\n    \"\"\"A class to manage subprocess execution with logging and environment control.\n    This class provides functionality to:\n    - Run Python callables or shell commands as subprocesses\n    - Configure environment variables for shell commands\n    - Log process output to specified files\n    - Control process lifecycle (start, stop, check status)\n    \"\"\"\n    def __init__(self, log_file: Optional[str] = None):\n        \"\"\"Initialize the SubProcessRunner.",
+        "detail": "src.utils.subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "Trigger",
+        "kind": 6,
+        "importPath": "src.utils.triggers",
+        "description": "src.utils.triggers",
+        "peekOfCode": "class Trigger:\n    \"\"\"Base class for task scheduling triggers.\n    This class provides functionality to determine when a task should run next based on\n    various scheduling patterns including cron expressions and specific dates.\n    \"\"\"\n    def __init__(self, \n                 cron: str,\n                 dates: Optional[List[datetime]] = None,\n                 timezone: Optional[str] = None):\n        \"\"\"Initialize a new Trigger.",
+        "detail": "src.utils.triggers",
+        "documentation": {}
+    },
+    {
+        "label": "OnStartTrigger",
+        "kind": 6,
+        "importPath": "src.utils.triggers",
+        "description": "src.utils.triggers",
+        "peekOfCode": "class OnStartTrigger(Trigger):\n    \"\"\"Special trigger that runs once immediately upon initialization.\"\"\"\n    def __init__(self):\n        \"\"\"Initialize the OnStartTrigger with current time as the only run time.\"\"\"\n        now = pendulum.now('UTC')\n        super().__init__(cron=\"* * * * *\", dates=[now])\n        self._first_run = True\n    def get_next_run(self) -> Optional[datetime]:\n        \"\"\"Get the next run time, which is only the start time once.\"\"\"\n        if self._first_run:",
+        "detail": "src.utils.triggers",
+        "documentation": {}
+    },
+    {
+        "label": "YamlConfig",
+        "kind": 6,
+        "importPath": "src.utils.yaml_config",
+        "description": "src.utils.yaml_config",
+        "peekOfCode": "class YamlConfig:\n    \"\"\"A class to manage YAML configuration files with environment variable support.\n    This class provides functionality to:\n    - Load YAML configuration files with comment preservation\n    - Substitute environment variables in the format ${EnvVarName}\n    - Reload configurations from file\n    - Access configuration values through dictionary-like interface\n    - Track and monitor imported/included configuration files for changes\n    \"\"\"\n    def __init__(self, config_file: Union[str, Path]):",
+        "detail": "src.utils.yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_has_config_file_changed",
+        "kind": 2,
+        "importPath": "tests.utils.test_config_file_change",
+        "description": "tests.utils.test_config_file_change",
+        "peekOfCode": "def test_has_config_file_changed():\n    \"\"\"Test detection of changes in the main configuration file.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key: original_value\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)\n        assert not config.has_config_file_changed(), \"New file should not be detected as changed\"\n        # Ensure file modification time will be different\n        time.sleep(0.1)",
+        "detail": "tests.utils.test_config_file_change",
+        "documentation": {}
+    },
+    {
+        "label": "test_check_and_reload_if_needed_for_main_file",
+        "kind": 2,
+        "importPath": "tests.utils.test_config_file_change",
+        "description": "tests.utils.test_config_file_change",
+        "peekOfCode": "def test_check_and_reload_if_needed_for_main_file():\n    \"\"\"Test automatic reload when main configuration file changes.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key: original_value\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)\n        assert config[\"key\"] == \"original_value\"\n        # Ensure file modification time will be different\n        time.sleep(0.1)",
+        "detail": "tests.utils.test_config_file_change",
+        "documentation": {}
+    },
+    {
+        "label": "test_monitor_new_content",
+        "kind": 2,
+        "importPath": "tests.utils.test_log_monitor",
+        "description": "tests.utils.test_log_monitor",
+        "peekOfCode": "def test_monitor_new_content():\n    \"\"\"Test monitoring new content written to log file.\"\"\"\n    with tempfile.NamedTemporaryFile(delete=False) as temp:\n        log_file = temp.name\n    try:\n        # Initialize monitor\n        monitor = LogFileMonitor(log_file)\n        # Write content to file\n        with open(log_file, 'w') as f:\n            f.write(\"test line 1\\n\")",
+        "detail": "tests.utils.test_log_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "test_monitor_from_start",
+        "kind": 2,
+        "importPath": "tests.utils.test_log_monitor",
+        "description": "tests.utils.test_log_monitor",
+        "peekOfCode": "def test_monitor_from_start():\n    \"\"\"Test monitoring from start of file.\"\"\"\n    with tempfile.NamedTemporaryFile(delete=False) as temp:\n        temp.write(b\"existing content\\n\")\n        log_file = temp.name\n    try:\n        monitor = LogFileMonitor(log_file, from_start=True)\n        content = monitor.get()\n        assert content is not None\n        assert \"existing content\" in content",
+        "detail": "tests.utils.test_log_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "test_handle_file_rotation",
+        "kind": 2,
+        "importPath": "tests.utils.test_log_monitor",
+        "description": "tests.utils.test_log_monitor",
+        "peekOfCode": "def test_handle_file_rotation():\n    \"\"\"Test handling of file rotation/truncation.\"\"\"\n    with tempfile.NamedTemporaryFile(delete=False) as temp:\n        log_file = temp.name\n    try:\n        # Initialize monitor\n        monitor = LogFileMonitor(log_file)\n        # Write initial content\n        with open(log_file, 'w') as f:\n            f.write(\"initial content\\n\")",
+        "detail": "tests.utils.test_log_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "test_nonexistent_file",
+        "kind": 2,
+        "importPath": "tests.utils.test_log_monitor",
+        "description": "tests.utils.test_log_monitor",
+        "peekOfCode": "def test_nonexistent_file():\n    \"\"\"Test monitoring a non-existent file.\"\"\"\n    monitor = LogFileMonitor(\"/nonexistent/file.log\")\n    # Monitor should handle non-existent file\n    time.sleep(0.2)\n    content = monitor.get()\n    assert content is None\n    assert monitor._get_file_size() == 0",
+        "detail": "tests.utils.test_log_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "test_simple_command",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_simple_command():\n    \"\"\"Test running a simple shell command.\"\"\"\n    runner = SubProcessRunner()\n    runner.start(\"echo 'test'\")\n    time.sleep(0.1)  # Give process time to complete\n    status = runner.get_status()\n    assert not status[\"running\"]\n    assert status[\"exit_code\"] == 0\n    assert \"test\" in status[\"output\"]\ndef test_python_callable():",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_python_callable",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_python_callable():\n    \"\"\"Test running a Python callable.\"\"\"\n    def sample_function():\n        print(\"Hello from Python\")\n        return\n    runner = SubProcessRunner()\n    runner.start(sample_function)\n    time.sleep(0.5)  # Increase sleep time to ensure process completion\n    status = runner.get_status()\n    assert not status[\"running\"]",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_environment_variables",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_environment_variables():\n    \"\"\"Test setting environment variables for shell commands.\"\"\"\n    runner = SubProcessRunner()\n    env = {\"TEST_VAR\": \"test_value\"}\n    runner.start(\"echo $TEST_VAR\", env=env)\n    time.sleep(0.1)  # Give process time to complete\n    status = runner.get_status()\n    assert \"test_value\" in status[\"output\"]\ndef test_process_lifecycle():\n    \"\"\"Test process lifecycle management (start/stop/status).\"\"\"",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_process_lifecycle",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_process_lifecycle():\n    \"\"\"Test process lifecycle management (start/stop/status).\"\"\"\n    runner = SubProcessRunner()\n    runner.start(\"sleep 10\")\n    assert runner.is_running()\n    runner.stop()\n    assert not runner.is_running()\n    status = runner.get_status()\n    assert not status[\"running\"]\ndef test_logging():",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_logging",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_logging():\n    \"\"\"Test logging functionality.\"\"\"\n    with tempfile.NamedTemporaryFile(delete=False) as temp:\n        log_file = temp.name\n    runner = SubProcessRunner(log_file)\n    runner.start(\"echo 'test logging'\")\n    time.sleep(0.1)  # Give process time to complete\n    with open(log_file, 'r') as f:\n        log_content = f.read()\n        assert \"Starting shell command\" in log_content",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_error_handling",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_error_handling():\n    \"\"\"Test error handling for invalid commands and states.\"\"\"\n    runner = SubProcessRunner()\n    # Test starting already running process\n    runner.start(\"sleep 5\")\n    with pytest.raises(ValueError):\n        runner.start(\"echo 'test'\")\n    runner.stop()\n    # Test stopping non-running process\n    with pytest.raises(ValueError):",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_long_running_process",
+        "kind": 2,
+        "importPath": "tests.utils.test_subprocess_runner",
+        "description": "tests.utils.test_subprocess_runner",
+        "peekOfCode": "def test_long_running_process():\n    \"\"\"Test handling of long-running processes.\"\"\"\n    runner = SubProcessRunner()\n    runner.start(\"sleep 10\")\n    assert runner.is_running()\n    status = runner.get_status()\n    assert status[\"running\"]\n    assert status[\"exit_code\"] is None\n    runner.stop()\n    assert not runner.is_running()",
+        "detail": "tests.utils.test_subprocess_runner",
+        "documentation": {}
+    },
+    {
+        "label": "test_cron_trigger",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_cron_trigger():\n    \"\"\"Test trigger with cron expression.\"\"\"\n    # Create a trigger that runs every minute\n    trigger = Trigger(cron=\"* * * * *\")\n    next_run = trigger.get_next_run()\n    # Next run should be within the next minute\n    now = pendulum.now()\n    assert next_run > now\n    assert next_run < now.add(minutes=2)\ndef test_cron_with_dates():",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_cron_with_dates",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_cron_with_dates():\n    \"\"\"Test trigger with both cron and dates.\"\"\"\n    now = pendulum.now()\n    future_dates = [\n        now.add(days=1).at(12, 0),  # Tomorrow at noon\n        now.add(days=2).at(12, 0),  # Day after tomorrow at noon\n        now.add(days=3).at(12, 0)   # Three days from now at noon\n    ]\n    # Trigger that should run at noon on specified dates\n    trigger = Trigger(cron=\"0 12 * * *\", dates=future_dates)",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_cron_beyond_dates",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_cron_beyond_dates():\n    \"\"\"Test trigger when next cron time is beyond max date.\"\"\"\n    now = pendulum.now()\n    dates = [\n        now.add(days=1).at(12, 0),  # Tomorrow at noon\n        now.add(days=2).at(12, 0)   # Day after tomorrow at noon\n    ]\n    # Trigger that runs every minute\n    trigger = Trigger(cron=\"* * * * *\", dates=dates)\n    # Should only get runs on the specified dates at the cron times",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_timezone_handling",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_timezone_handling():\n    \"\"\"Test trigger with different timezone.\"\"\"\n    tz = \"America/New_York\"\n    now = pendulum.now(tz)\n    dates = [now.add(days=1).at(12, 0)]\n    trigger = Trigger(cron=\"0 12 * * *\", dates=dates, timezone=tz)  # Noon NY time\n    next_run = trigger.get_next_run()\n    assert next_run.tzinfo.name == tz\n    assert next_run.hour == 12\n    assert next_run.date() == dates[0].date()",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_invalid_trigger_config",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_invalid_trigger_config():\n    \"\"\"Test invalid trigger configurations.\"\"\"\n    # Test missing cron\n    with pytest.raises(TypeError, match=\"missing 1 required positional argument: 'cron'\"):\n        Trigger()\n    # Test empty cron\n    with pytest.raises(ValueError, match=\"Cron expression is required\"):\n        Trigger(cron=\"\")\n    # Test None cron\n    with pytest.raises(ValueError, match=\"Cron expression is required\"):",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_past_dates_trigger",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_past_dates_trigger():\n    \"\"\"Test trigger with all dates in the past.\"\"\"\n    now = pendulum.now()\n    past_dates = [\n        now.subtract(days=2),\n        now.subtract(days=1)\n    ]\n    trigger = Trigger(cron=\"* * * * *\", dates=past_dates)\n    assert trigger.get_next_run() is None\ndef test_on_start_trigger():",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_on_start_trigger",
+        "kind": 2,
+        "importPath": "tests.utils.test_triggers",
+        "description": "tests.utils.test_triggers",
+        "peekOfCode": "def test_on_start_trigger():\n    \"\"\"Test OnStartTrigger functionality.\"\"\"\n    trigger = OnStartTrigger()\n    # First call should return current time\n    first_run = trigger.get_next_run()\n    assert first_run is not None\n    assert first_run <= pendulum.now('UTC')\n    # Subsequent calls should return None\n    assert trigger.get_next_run() is None",
+        "detail": "tests.utils.test_triggers",
+        "documentation": {}
+    },
+    {
+        "label": "test_basic_loading",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_basic_loading():\n    \"\"\"Test basic YAML file loading.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key1: value1\\nkey2: value2\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)\n        assert config[\"key1\"] == \"value1\"\n        assert config[\"key2\"] == \"value2\"\n    finally:",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_env_var_substitution",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_env_var_substitution():\n    \"\"\"Test environment variable substitution in YAML values.\"\"\"\n    # Set test environment variables\n    os.environ[\"TEST_VAR1\"] = \"test_value1\"\n    os.environ[\"TEST_VAR2\"] = \"test_value2\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key1: ${TEST_VAR1}\\nkey2: prefix_${TEST_VAR2}_suffix\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_nested_env_vars",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_nested_env_vars():\n    \"\"\"Test environment variable substitution in nested structures.\"\"\"\n    os.environ[\"NESTED_VAR\"] = \"nested_value\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"\"\"\n        parent:\n          child1: ${NESTED_VAR}\n          child2:\n            - item1\n            - ${NESTED_VAR}",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_missing_env_var",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_missing_env_var():\n    \"\"\"Test behavior with missing environment variables.\"\"\"\n    # Ensure the environment variable doesn't exist\n    if \"NONEXISTENT_VAR\" in os.environ:\n        del os.environ[\"NONEXISTENT_VAR\"]\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key: ${NONEXISTENT_VAR}\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_reload",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_reload():\n    \"\"\"Test configuration reload functionality.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key: original_value\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)\n        assert config[\"key\"] == \"original_value\"\n        # Modify the file and reload\n        with open(temp_path, 'w') as f:",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_get_with_default",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_get_with_default():\n    \"\"\"Test get method with default values.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key1: value1\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)\n        assert config.get(\"key1\") == \"value1\"\n        assert config.get(\"nonexistent_key\") is None\n        assert config.get(\"nonexistent_key\", \"default_value\") == \"default_value\"",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_contains",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_contains():\n    \"\"\"Test __contains__ method.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"key1: value1\\n\")\n        temp_path = temp.name\n    try:\n        config = YamlConfig(temp_path)\n        assert \"key1\" in config\n        assert \"nonexistent_key\" not in config\n    finally:",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_file_not_found",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_file_not_found():\n    \"\"\"Test behavior when configuration file is not found.\"\"\"\n    nonexistent_path = \"/nonexistent/path/config.yaml\"\n    with pytest.raises(FileNotFoundError):\n        YamlConfig(nonexistent_path)\ndef test_comment_preservation():\n    \"\"\"Test that comments in YAML files are preserved.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"\"\"\n        # This is a comment",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_comment_preservation",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_config",
+        "description": "tests.utils.test_yaml_config",
+        "peekOfCode": "def test_comment_preservation():\n    \"\"\"Test that comments in YAML files are preserved.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as temp:\n        temp.write(\"\"\"\n        # This is a comment\n        key1: value1  # Inline comment\n        key2: value2\n        \"\"\")\n        temp_path = temp.name\n    try:",
+        "detail": "tests.utils.test_yaml_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_import_absolute_path",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_import_absolute_path():\n    \"\"\"Test importing a YAML file using an absolute path.\"\"\"\n    # Create the file to be imported\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as import_temp:\n        import_temp.write(\"imported_key: imported_value\\n\")\n        import_path = import_temp.name\n    # Create the main config file that imports the other file\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as main_temp:\n        main_temp.write(f\"import_result: __import__({import_path})\\n\")\n        main_path = main_temp.name",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_import_relative_path",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_import_relative_path():\n    \"\"\"Test importing a YAML file using a relative path.\"\"\"\n    # Create a temporary directory\n    with tempfile.TemporaryDirectory() as temp_dir:\n        # Create the file to be imported\n        import_path = Path(temp_dir) / \"imported.yaml\"\n        with open(import_path, 'w') as f:\n            f.write(\"imported_key: imported_value\\n\")\n        # Create the main config file that imports the other file\n        main_path = Path(temp_dir) / \"main.yaml\"",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_include_absolute_path",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_include_absolute_path():\n    \"\"\"Test including a YAML file using an absolute path.\"\"\"\n    # Create the file to be included\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as include_temp:\n        include_temp.write(\"included_key: included_value\\n\")\n        include_path = include_temp.name\n    # Create the main config file that includes the other file\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as main_temp:\n        main_temp.write(f\"include_result: __include__({include_path})\\n\")\n        main_path = main_temp.name",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_include_relative_path",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_include_relative_path():\n    \"\"\"Test including a YAML file using a relative path.\"\"\"\n    # Create a temporary directory\n    with tempfile.TemporaryDirectory() as temp_dir:\n        # Create the file to be included\n        include_path = Path(temp_dir) / \"included.yaml\"\n        with open(include_path, 'w') as f:\n            f.write(\"included_key: included_value\\n\")\n        # Create the main config file that includes the other file\n        main_path = Path(temp_dir) / \"main.yaml\"",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_nested_import",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_nested_import():\n    \"\"\"Test nested imports in YAML files.\"\"\"\n    # Create a temporary directory\n    with tempfile.TemporaryDirectory() as temp_dir:\n        # Create the deepest file to be imported\n        deep_path = Path(temp_dir) / \"deep.yaml\"\n        with open(deep_path, 'w') as f:\n            f.write(\"deep_key: deep_value\\n\")\n        # Create the middle file that imports the deep file\n        middle_path = Path(temp_dir) / \"middle.yaml\"",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_env_vars_in_imported_file",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_env_vars_in_imported_file():\n    \"\"\"Test environment variable substitution in imported files.\"\"\"\n    os.environ[\"IMPORT_TEST_VAR\"] = \"import_test_value\"\n    # Create a temporary directory\n    with tempfile.TemporaryDirectory() as temp_dir:\n        # Create the file to be imported with env vars\n        import_path = Path(temp_dir) / \"imported.yaml\"\n        with open(import_path, 'w') as f:\n            f.write(\"env_key: ${IMPORT_TEST_VAR}\\n\")\n        # Create the main config file that imports the other file",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_file_not_found_import",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_file_not_found_import():\n    \"\"\"Test behavior when imported file is not found.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as main_temp:\n        main_temp.write(\"import_result: __import__(nonexistent.yaml)\\n\")\n        main_path = main_temp.name\n    try:\n        with pytest.raises(FileNotFoundError):\n            YamlConfig(main_path)\n    finally:\n        os.unlink(main_path)",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "test_file_not_found_include",
+        "kind": 2,
+        "importPath": "tests.utils.test_yaml_import_include",
+        "description": "tests.utils.test_yaml_import_include",
+        "peekOfCode": "def test_file_not_found_include():\n    \"\"\"Test behavior when included file is not found.\"\"\"\n    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as main_temp:\n        main_temp.write(\"include_result: __include__(nonexistent.yaml)\\n\")\n        main_path = main_temp.name\n    try:\n        with pytest.raises(FileNotFoundError):\n            YamlConfig(main_path)\n    finally:\n        os.unlink(main_path)",
+        "detail": "tests.utils.test_yaml_import_include",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "run_tests",
+        "description": "run_tests",
+        "peekOfCode": "def main():\n    \"\"\"Run all tests using pytest.\"\"\"\n    # Add the project root to the Python path\n    project_root = os.path.dirname(os.path.abspath(__file__))\n    sys.path.insert(0, project_root)\n    # Make sure tests directory exists\n    tests_dir = os.path.join(project_root, 'tests')\n    if not os.path.exists(tests_dir):\n        print(f\"Error: Tests directory not found: {tests_dir}\")\n        sys.exit(1)",
+        "detail": "run_tests",
+        "documentation": {}
+    }
+]

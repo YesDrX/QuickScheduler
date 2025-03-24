@@ -1,0 +1,16 @@
+pydantic>=2.0
+sqlalchemy>=2.0.0
+psutil>=5.9.4
+
+# Core dependencies
+pytz>=2023.3
+httpx>=0.25.0
+tzlocal
+
+# Development dependencies
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+
+# Search functionality
+fuzzywuzzy>=0.18.0

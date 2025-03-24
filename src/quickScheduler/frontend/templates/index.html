@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - QuickScheduler{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-4 mb-4">Welcome to QuickScheduler</h1>
+    <p class="lead mb-4">A simple and efficient task scheduling system</p>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="d-grid gap-2">
+                <a href="/tasks" class="btn btn-primary btn-lg">
+                    <i class="bi bi-list-task"></i> View Tasks
+                </a>
+            </div>
+        </div>
+    </div>
+    {% include 'stats_dashboard.html' %}
+</div>
+{% endblock %}

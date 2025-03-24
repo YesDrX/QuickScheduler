@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.name }} - QuickScheduler{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>{{ task.name }}</h1>
+            <div class="btn-group" role="group">
+                <button onclick="triggerTask('{{ task.hash_id }}')" class="btn btn-primary" title="Trigger Task">
+                    <i class="bi bi-play-fill"></i> Run Now
+                </button>
+                <button onclick="toggleTaskStatus('{{ task.hash_id }}', '{{ task.status }}')" class="btn btn-{{ 'success' if task.status == 'active' else 'danger' }}" title="Toggle Status">
+                    <i class="bi bi-{{ 'check-circle' if task.status == 'active' else 'x-circle' }}"></i> {{ 'Enabled' if task.status == 'active' else 'Disabled' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Task Details</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Task ID</dt>
+                    <dd class="col-sm-9"><code>{{ task.hash_id }}</code></dd>
+
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">{{ task.description or "No description provided" }}</dd>
+
+                    <dt class="col-sm-3">Command</dt>
+                    <dd class="col-sm-9"><code>{{ task.command }}</code></dd>
+                    
+                    <dt class="col-sm-3">Callable</dt>
+                    <dd class="col-sm-9"><code>{{ task.callable_func }}</code></dd>
+
+                    <dt class="col-sm-3">Working Directory</dt>
+                    <dd class="col-sm-9">{{ task.working_directory }}</dd>
+
+                    <dt class="col-sm-3">Schedule Type</dt>
+                    <dd class="col-sm-9"><span class="badge bg-info">{{ task.schedule_type }}</span></dd>
+
+                    <dt class="col-sm-3">Schedule Config</dt>
+                    <dd class="col-sm-9"><pre class="mb-0"><code>{{ task.schedule_config | tojson(indent=2) }}</code></pre></dd>
+
+                    <dt class="col-sm-3">Timeout</dt>
+                    <dd class="col-sm-9">{{ task.timeout or "No timeout" }} seconds</dd>
+
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-{{ 'success' if task.status == 'active' else 'danger' }}">
+                            {{ 'Enabled' if task.status == 'active' else 'Disabled' }}
+                        </span>
+                    </dd>
+
+                    <dt class="col-sm-3">Created At</dt>
+                    <dd class="col-sm-9">{{ task.created_at or "NA" }}</dd>
+
+                    <dt class="col-sm-3">Updated At</dt>
+                    <dd class="col-sm-9">{{ task.updated_at or "NA" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/tasks/{{ task.hash_id }}/jobs" class="btn btn-secondary">
+                        <i class="bi bi-clock-history"></i> View Job History
+                    </a>
+
+                    <button onclick="deleteTask('{{ task.hash_id }}')" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete Task
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function triggerTask(taskId) {
+    if (!confirm('Are you sure you want to run this task now?')) return;
+
+    fetch(`/tasks/${taskId}/trigger`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Task triggered successfully!');
+        window.location.href = `/tasks/${taskId}/jobs/${data.job_id}`;
+    })
+    .catch(error => {
+        alert('Error triggering task: ' + error);
+    });
+}
+
+function toggleTaskStatus(taskId, currentStatus) {
+    if (!confirm('Are you sure you want to ' + (currentStatus === 'active' ? 'disable' : 'enable') + ' this task?')) return;
+
+    fetch(`/tasks/${taskId}/status`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.reload();
+    })
+    .catch(error => {
+        alert('Error updating task status: ' + error);
+    });
+}
+
+function deleteTask(taskId) {
+    if (!confirm('Are you sure you want to delete this task? This action cannot be undone.')) return;
+
+    fetch(`/tasks/${taskId}`, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Task deleted successfully!');
+            window.location.href = '/tasks';
+        } else {
+            throw new Error('Failed to delete task');
+        }
+    })
+    .catch(error => {
+        alert('Error deleting task: ' + error);
+    });
+}
+</script>
+{% endblock %}

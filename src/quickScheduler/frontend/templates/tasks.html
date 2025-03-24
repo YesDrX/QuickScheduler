@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks - QuickScheduler{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Tasks</h1>
+            <div class="form-group">
+                <input type="text" class="form-control" id="taskSearch" placeholder="Search tasks..." onkeyup="searchTasks()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Command</th>
+                <th>Next Run</th>
+                <th>Last Run</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.name }}</td>
+                <td><code>{{ task.command }}</code></td>
+                <td>{{ task.next_run_time or 'Not scheduled' }}</td>
+                <td>{{ task.previous_run_time or 'Never' }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if task.status == 'active' else 'danger' }}">
+                        {{ 'Enabled' if task.status == 'active' else 'Disabled' }}
+                    </span>
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="/tasks/{{ task.hash_id }}" class="btn btn-sm btn-info" title="View Details">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                        <a href="/tasks/{{ task.hash_id }}/jobs" class="btn btn-sm btn-secondary" title="Job History">
+                            <i class="bi bi-clock-history"></i>
+                        </a>
+                        <button onclick="triggerTask('{{ task.hash_id }}')" class="btn btn-sm btn-primary" title="Trigger Task">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+                        <button onclick="toggleTaskStatus('{{ task.hash_id }}', '{{ task.status }}')" class="btn btn-sm {{ 'btn-success' if task.status == 'active' else 'btn-danger' }}" title="Toggle Status">
+                            <i class="bi {{ 'bi-toggle-on' if task.status == 'active' else 'bi-toggle-off' }}"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function searchTasks() {
+    const searchTerm = document.getElementById('taskSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const command = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        const taskId = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+        
+        if (name.includes(searchTerm) || command.includes(searchTerm) || taskId.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function triggerTask(taskId) {
+    fetch(`/tasks/${taskId}/trigger`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Task triggered successfully!');
+        // Optionally redirect to job details page
+        window.location.href = `/tasks/${taskId}/jobs/${data.job_id}`;
+    })
+    .catch(error => {
+        alert('Error triggering task: ' + error);
+    });
+}
+
+function toggleTaskStatus(taskId, currentStatus) {
+    fetch(`/tasks/${taskId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to update task status');
+        return response.json();
+    })
+    .then(() => {
+        window.location.reload();
+    })
+    .catch(error => {
+        alert('Error updating task status: ' + error);
+    });
+}
+</script>
+{% endblock %}

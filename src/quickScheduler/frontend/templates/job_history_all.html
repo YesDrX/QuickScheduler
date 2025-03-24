@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}All Jobs History - QuickScheduler{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>All Jobs History</h1>
+            <div class="d-flex gap-3">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="taskSearch" placeholder="Search by task name..." onkeyup="searchJobs()">
+                </div>
+                <div class="btn-group" role="group" aria-label="Job Filter">
+                    <input type="radio" class="btn-check" name="jobFilter" id="allJobs" value="all" {% if request.query_params.get('filter', 'all') == 'all' %}checked{% endif %}>
+                    <label class="btn btn-outline-primary" for="allJobs">All Jobs</label>
+                    <input type="radio" class="btn-check" name="jobFilter" id="failedJobs" value="failed" {% if request.query_params.get('filter') == 'failed' %}checked{% endif %}>
+                    <label class="btn btn-outline-primary" for="failedJobs">Failed Jobs</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive mb-4">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Job ID</th>
+                <th>Status</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Duration</th>
+                <th>Exit Code</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr data-task-name="{{ job.task_name | lower }}">
+                <td>{{ job.task_name }}</td>
+                <td>{{ job.id }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if job.status == 'completed' else 'danger' }}">
+                        {{ job.status }}
+                    </span>
+                </td>
+                <td>{{ job.start_time.strftime('%Y%m%d %H:%M:%S') if job.start_time else '-' }}</td>
+                <td>{{ job.end_time.strftime('%Y%m%d %H:%M:%S') if job.end_time else '-' }}</td>
+                <td>{{ job.duration if job.duration else '-' }} Seconds</td>
+                <td>{{ job.exit_code if job.exit_code is not none else '-' }} </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="/tasks/{{ job.task_hash_id }}/jobs/{{ job.id }}" class="btn btn-sm btn-info" title="View Details">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                        <a href="/tasks/{{ job.task_hash_id }}/jobs/{{ job.id }}/log" class="btn btn-sm btn-secondary" title="View Log">
+                            <i class="bi bi-file-text"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if total_pages > 1 %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ current_page - 1 }}&filter={{ request.query_params.get('filter', 'all') }}" {% if current_page == 1 %}tabindex="-1" aria-disabled="true"{% endif %}>Previous</a>
+        </li>
+        {% for page in range(1, total_pages + 1) %}
+        <li class="page-item {% if page == current_page %}active{% endif %}">
+            <a class="page-link" href="?page={{ page }}&filter={{ request.query_params.get('filter', 'all') }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+        <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ current_page + 1 }}&filter={{ request.query_params.get('filter', 'all') }}" {% if current_page == total_pages %}tabindex="-1" aria-disabled="true"{% endif %}>Next</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+<script>
+function searchJobs() {
+    const searchTerm = document.getElementById('taskSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const taskName = row.getAttribute('data-task-name');
+        if (taskName.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function filterJobs() {
+    const filterValue = document.querySelector('input[name="jobFilter"]:checked').value;
+    window.location.href = window.location.pathname + '?filter=' + filterValue;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const filterInputs = document.querySelectorAll('input[name="jobFilter"]');
+    filterInputs.forEach(input => {
+        input.addEventListener('change', filterJobs);
+    });
+});
+</script>
+{% endblock %}

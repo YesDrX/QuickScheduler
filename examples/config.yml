@@ -1,0 +1,12 @@
+# Data directory
+data_dir : "${PROJECT_DIR}/examples/"
+
+# Backend API config
+backend_api_host : "127.0.0.1"
+backend_api_port : 8000
+
+# Frontend config
+frontend_host : "0.0.0.0"
+frontend_port : 8001
+
+# Calendars

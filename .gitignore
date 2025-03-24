@@ -1,0 +1,19 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pytest cache
+.pytest_cache/
+
+# Database files
+*.db
+
+# Log files
+logs/
+
+# Environment
+.env
+.venv
+venv/
+ENV/

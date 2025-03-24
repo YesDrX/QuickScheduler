@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Job Log - {{ task.name }} - QuickScheduler{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Job Log - {{ task.name }}</h1>
+            <div class="btn-group" role="group">
+                <a href="/tasks/{{ task.hash_id }}/jobs/{{ job.id }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Job Details
+                </a>
+                {% if job.status == 'running' %}
+                <button onclick="stopJob('{{ task.hash_id }}', '{{ job.id }}')" class="btn btn-danger">
+                    <i class="bi bi-stop-fill"></i> Stop Job
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Job Output</h5>
+            <span class="badge bg-{{ job.status | status_color }}">
+                {{ job.status }}
+            </span>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <pre class="m-0 p-3"><code>{{ log or "No Log Available"}}</code></pre>
+    </div>
+</div>
+
+<script>
+function stopJob(taskId, jobId) {
+    if (!confirm('Are you sure you want to stop this job?')) return;
+
+    fetch(`/tasks/${taskId}/jobs/${jobId}/stop`, {
+        method: 'POST',
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Job stopped successfully!');
+            window.location.reload();
+        } else {
+            throw new Error('Failed to stop job');
+        }
+    })
+    .catch(error => {
+        alert('Error stopping job: ' + error);
+    });
+}
+</script>
+{% endblock %}
