@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-
 import asyncio
 import logging
-import os
 from pathlib import Path
 from quickScheduler.main import QuickScheduler
 from quickScheduler.backend.models import TaskModel, GlobalCallableFunctions
@@ -10,7 +7,6 @@ from quickScheduler.utils.triggers import TriggerType
 
 def example_worker():
     print("Hello World!")
-example_worker_key = GlobalCallableFunctions.register_function(example_worker)
 
 # Example programmatic tasks
 def create_example_tasks():
@@ -33,14 +29,13 @@ def create_example_tasks():
                 "run_time" : "12:00",
                 "timezone" : "America/New_York"
             },
-            callable_func = example_worker_key
+            callable_func = GlobalCallableFunctions.register_function(example_worker)
         ).calculate_hash_id()
     ]
 
 async def main():
     # Get the path to the YAML tasks directory
     current_dir = Path(__file__).parent
-    tasks_dir = current_dir / "tasks"
     config_filename = current_dir / "config.yml"
     
     # Create programmatic tasks

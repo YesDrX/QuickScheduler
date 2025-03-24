@@ -65,38 +65,3 @@ class QuickScheduler:
                 logging.info("Frontend stopped, restarting...")
                 self.start_frontend()
             time.sleep(1)
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="[%(levelname)s][%(asctime)s] %(message)s")
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default="config.yaml", help="Path to config file")
-    args = parser.parse_args()
-    
-    tasks = [
-        TaskModel(
-            name="Memory Monitor",
-            description="Monitor system memory usage and alert if above threshold",
-            schedule_type=TriggerType.DAILY,
-            schedule_config={
-                "run_time" : "12:00",
-                "timezone" : "America/New_York"
-            },
-            command="free -h"
-        ).calculate_hash_id(),
-        TaskModel(
-            name="Bad Job",
-            description="A job that will fail",
-            schedule_type=TriggerType.INTERVAL,
-            schedule_config={
-                "start_time" : "10:00",
-                "end_time"   : "13:00",
-                "interval"   : "30",
-                "timezone" : "America/New_York"
-            },
-            command="exit 1"
-        ).calculate_hash_id()    
-    ]
-    
-    scheduler = QuickScheduler(args.config, tasks)
-    scheduler.run()
