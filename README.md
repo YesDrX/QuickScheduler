@@ -61,6 +61,11 @@ task = TaskModel(
 )
 ```
 
+## Screenshots
+![Main Page](examples/images/main_page.png)
+![Tasks Page](examples/images/tasks.png)
+![Task Details Page](examples/images/task.png)
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
