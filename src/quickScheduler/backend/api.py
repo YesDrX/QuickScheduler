@@ -9,22 +9,26 @@ import asyncio
 import logging
 import os
 import pprint
-import pytz
 import threading
 import traceback
 from copy import deepcopy
 from datetime import datetime
 from typing import Callable, List, Optional
 
+import pytz
+import yaml
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pathvalidate import sanitize_filename
 from sqlalchemy import text
 
 from quickScheduler.backend import database, models
-from quickScheduler.utils.subprocess_runner import SubProcessRunner
 from quickScheduler.utils.email_utils import send_email
+from quickScheduler.utils.subprocess_runner import SubProcessRunner
 
+def represent_unserializable(dumper, data):
+    return dumper.represent_scalar('!unserializable', str(data))
+yaml.add_multi_representer(object, represent_unserializable)
 
 class API:
     def __init__(
@@ -561,20 +565,19 @@ class API:
                     ## send email here
                     if self.email_config:
                         if task:
-                            
                             email_contents = [
                                 f"### Task {task.name}'s job {job.id} has failed",
                                 f"### Task Config",
-                                pprint.pformat(models.model_to_dict(task), indent=4),
+                                "<pre>\n" + yaml.dump(models.model_to_dict(task), default_flow_style=False, sort_keys=False) + "</pre>",
+                                # pprint.pformat(, indent=4),
                                 f"### Error",
                                 job.error_message
                             ]
                         else:
-                            
                             email_contents = [
                                 f"### Job {job.id} has failed",
                                 f"### Job Config",
-                                pprint.pformat(models.model_to_dict(job), indent=4),
+                                "<pre>\n" + yaml.dump(models.model_to_dict(job), default_flow_style=False, sort_keys=False) + "</pre>",
                                 f"### Error",
                                 job.error_message
                             ]

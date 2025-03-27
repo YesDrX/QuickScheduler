@@ -35,10 +35,7 @@ def _convert_to_html(content: object) -> str:
     elif isinstance(content, (dict, list)):
         return f"<pre>{str(content)}</pre>"
     elif isinstance(content, str):
-        # Check if content is markdown
-        if any(marker in content for marker in ['#', '```', '**', '__', '- ']):
-            return markdown.markdown(content)
-        return f"<p>{content}</p>"
+        return markdown.markdown(content)
     else:
         return f"<pre>{str(content)}</pre>"
 
