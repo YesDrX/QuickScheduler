@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quick-scheduler"
+version = "1.0.0"
+authors = [
+    {name = "Yes DrX", email = "yes.drx@gmail.com"},
+]
+description = "A quick task scheduling library"
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pydantic>=2.0",
+    "sqlalchemy>=2.0.0",
+    "psutil>=5.9.4",
+    "pathvalidate>=3.2.3",
+    "pytz>=2023.3",
+    "httpx>=0.25.0",
+    "tzlocal",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/YesDrX/QuickScheduler"
+"Bug Tracker" = "https://github.com/YesDrX/QuickScheduler/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = { find = { where = ["src"] } }
+include-package-data = true

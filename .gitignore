@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+dist/
+build/
+*$.egg-info/
+src/quick_scheduler.egg-info/
+src/quick_scheduler.egg-info/SOURCES.txt
 
 # pytest cache
 .pytest_cache/

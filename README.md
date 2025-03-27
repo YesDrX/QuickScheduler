@@ -16,7 +16,15 @@ A Python-based task scheduler for running automated tasks efficiently. It provid
 ## Installation
 
 ```bash
+git clone https://github.com/YesDrX/QuickScheduler.git
+cd QuickScheduler
 pip install -r requirements.txt
+pip install .
+```
+
+or 
+```bash
+pip install quick-scheduler
 ```
 
 ## Usage
@@ -46,10 +54,10 @@ command: curl -f http://localhost:8000/health
 Or create tasks programmatically:
 
 ```python
-from quickScheduler.backend.models import TaskModel
+from quickScheduler.backend.models import TaskModel, GlobalCallableFunctions
 from quickScheduler.utils.triggers import TriggerType
 
-task = TaskModel(
+task1 = TaskModel(
     name="Memory Monitor",
     description="Monitor system memory usage",
     schedule_type=TriggerType.DAILY,
@@ -58,7 +66,28 @@ task = TaskModel(
         "timezone": "America/New_York"
     },
     command="free -h"
+).calculate_hash_id()
+
+"""
+A task could be a python callable
+"""
+def example_worker():
+    print("Hello World!")
+
+task2 = TaskModel(
+            name="Job to fail",
+            description="Print 'Hello World!' to the console",
+            schedule_type=TriggerType.IMMEDIATE,
+            callable_func = GlobalCallableFunctions.register_function(example_worker)
+        ).calculate_hash_id()
+
+
+from quickScheduler import QuickScheduler
+scheduler = QuickScheduler(
+    config_file = PATH_TO_YAML_CONFIG_FILE # see examples/config.yml
+    tasks=[task1, task2]
 )
+scheduler.run()
 ```
 
 ## Screenshots

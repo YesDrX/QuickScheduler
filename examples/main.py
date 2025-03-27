@@ -2,7 +2,7 @@ import asyncio
 import logging
 import pprint
 from pathlib import Path
-from quickScheduler.main import QuickScheduler
+from quickScheduler import QuickScheduler
 from quickScheduler.backend.models import TaskModel, GlobalCallableFunctions, JobModel, model_to_dict
 from quickScheduler.utils.triggers import TriggerType
 
