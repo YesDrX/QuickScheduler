@@ -8,6 +8,7 @@ This module contains test cases for the Database class and database models, cove
 """
 
 import pytest
+import pytz
 from datetime import datetime, timedelta
 import uuid
 from sqlalchemy import text, inspect
@@ -44,8 +45,8 @@ def task_model():
     return database.TaskModel(
         name=f"Test Task {uuid.uuid4()}",
         command="echo 'test'",
-        schedule_type=models.TaskScheduleType.INTERVAL,
-        schedule_config={"interval_seconds": 60},
+        schedule_type=models.TriggerType.INTERVAL,
+        schedule_config={"interval": 60, "start_time" : "00:00", "end_time":"23:55"},
         status=models.TaskStatus.ACTIVE,
         working_directory="/tmp",
         environment={"TEST": "true"},
@@ -110,17 +111,67 @@ def test_update_task(db, task_model):
 
 
 def test_delete_task(db, task_model):
-    """Test deleting a task."""
+    """Test deleting a task and its associated jobs."""
     with db.get_session() as session:
-        session.add(task_model.calculate_hash_id())
-        session.commit()
-        task_id = task_model.id
-        
-        session.delete(task_model.calculate_hash_id())
+        # Create test task with jobs
+        session.add(task_model)
         session.commit()
         
-        deleted_task = db.get_task_by_id(session, task_id)
-        assert deleted_task is None
+        # Create associated jobs
+        job1 = database.JobModel(
+            task_hash_id=task_model.hash_id,
+            start_time=datetime.now(pytz.UTC),
+            end_time=datetime.now(pytz.UTC),
+            status=models.JobStatus.COMPLETED
+        )
+        job2 = database.JobModel(
+            task_hash_id=task_model.hash_id,
+            start_time=datetime.now(pytz.UTC),
+            end_time=datetime.now(pytz.UTC),
+            status=models.JobStatus.FAILED
+        )
+        session.add_all([job1, job2])
+        session.commit()
+
+        # Delete the task
+        result = db.delete_task(session, task_model.hash_id)
+        assert result is True
+
+        # Verify task and jobs are removed
+        assert db.get_task_by_id(session, task_model.hash_id) is None
+        assert db.count_jobs(session) == 0
+
+
+def test_delete_nonexistent_task(db):
+    """Test deleting a task that doesn't exist."""
+    with db.get_session() as session:
+        non_existent_id = str(uuid.uuid4())
+        result = db.delete_task(session, non_existent_id)
+        assert result is False
+
+
+def test_task_deletion_maintains_integrity(db, task_model):
+    """Test deleting one task doesn't affect others."""
+    with db.get_session() as session:
+        # Create two tasks
+        task1 = task_model
+        task2 = database.TaskModel(
+            name="Other Task",
+            command="echo 'other'",
+            schedule_type=models.TriggerType.INTERVAL,
+            schedule_config={"interval_seconds": 300}
+        )
+        session.add_all([task1, task2])
+        session.commit()
+
+        initial_count = db.count_tasks(session)
+        
+        # Delete one task
+        db.delete_task(session, task1.hash_id)
+        
+        # Verify counts and remaining task
+        assert db.count_tasks(session) == initial_count - 1
+        assert db.get_task_by_id(session, task2.hash_id) is not None
 
 
 def test_create_job(db, task_model):
@@ -132,7 +183,7 @@ def test_create_job(db, task_model):
         
         job = database.JobModel(
             task_hash_id=task_model.hash_id,
-            trigger_time=datetime.utcnow(),
+            trigger_time=datetime.now(pytz.UTC),
             status=models.JobStatus.PENDING
         )
         session.add(job)
@@ -153,7 +204,7 @@ def test_job_lifecycle(db, task_model):
         
         job = database.JobModel(
             task_hash_id=task_model.hash_id,
-            trigger_time=datetime.utcnow(),
+            trigger_time=datetime.now(pytz.UTC),
             status=models.JobStatus.PENDING
         )
         session.add(job)
@@ -161,11 +212,11 @@ def test_job_lifecycle(db, task_model):
         
         # Test status transitions
         job.status = models.JobStatus.RUNNING
-        job.start_time = datetime.utcnow()
+        job.start_time = datetime.now(pytz.UTC)
         session.commit()
         
         job.status = models.JobStatus.COMPLETED
-        job.end_time = datetime.utcnow()
+        job.end_time = datetime.now(pytz.UTC)
         job.exit_code = 0
         session.commit()
         
@@ -184,7 +235,7 @@ def test_task_jobs_relationship(db, task_model):
         jobs = [
             database.JobModel(
                 task_hash_id=task_model.hash_id,
-                trigger_time=datetime.utcnow() + timedelta(minutes=i),
+                trigger_time=datetime.now(pytz.UTC) + timedelta(minutes=i),
                 status=models.JobStatus.PENDING
             )
             for i in range(3)
@@ -218,7 +269,7 @@ def test_task_validation(db):
             task = database.TaskModel(
                 name="Invalid Task",
                 command="echo 'test'",
-                schedule_type=models.TaskScheduleType.INTERVAL,
+                schedule_type=models.TriggerType.INTERVAL,
                 schedule_config={"interval_seconds": 60},
                 status="invalid"
             )

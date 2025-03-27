@@ -8,18 +8,22 @@ and jobs, as well as endpoints for task scheduling and job control.
 import asyncio
 import logging
 import os
+import pprint
+import pytz
 import threading
 import traceback
 from copy import deepcopy
 from datetime import datetime
-from typing import List, Optional
+from typing import Callable, List, Optional
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
-from  fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse
+from pathvalidate import sanitize_filename
 from sqlalchemy import text
 
 from quickScheduler.backend import database, models
 from quickScheduler.utils.subprocess_runner import SubProcessRunner
+from quickScheduler.utils.email_utils import send_email
 
 
 class API:
@@ -28,11 +32,28 @@ class API:
             host: str = "0.0.0.0",
             port: int = 8000,
             working_directory: str = ".",
+            email_config : Optional[models.EmailConfig] = None,
+            send_alert_callable : Optional[Callable] = None
         ):
+        """
+        Initialize the API server.
+        Args:
+            host (str): Host address for the server.
+            port (int): Port number for the server.
+            working_directory (str): Working directory for the server.
+            email_config (Optional[models.EmailConfig]): Email configuration for sending alerts.
+            send_alert_callable (Optional[Callable]): Callable function for sending alerts.
+                Args for send_alert_callable should be:
+                    msg  : str
+                    task : models.TaskModel
+                    job  : models.TaskModel
+        """
         logging.info(f"initializing API server in {working_directory}")
         self.working_directory = os.path.abspath(os.path.expanduser(working_directory))
         self.host = host
         self.port = port
+        self.email_config = email_config
+        self.send_alert_callable = send_alert_callable
         self.thread = None
         self.log_dir = os.path.join(self.working_directory, "logs")
         if not os.path.exists(self.log_dir):
@@ -179,18 +200,59 @@ class API:
             Raises:
                 HTTPException: If task not found or deletion fails
             """
-            db_session = db.get_session()
-            task = db.get_task_by_id(session=db_session, task_hash_id=task_hash_id)
-            if task is None:
-                raise HTTPException(status_code=404, detail="Task not found")
-
-            try:
-                db_session.delete(task)
-                db_session.commit()
+            session = db.get_session()
+            if db.delete_task(session, task_hash_id):
                 return {"message": "Task deleted successfully"}
-            except Exception as e:
-                db_session.rollback()
-                raise HTTPException(status_code=400, detail=str(e))
+            else:
+                raise HTTPException(status_code=404)
+
+        @app.delete("/jobs/{job_id}")
+        async def delete_job(job_id: int):
+            """Delete a single job.
+
+            Args:
+                job_id: Job ID
+
+            Returns:
+                deletion message
+            """
+            session = db.get_session()
+            if db.delete_job(session, job_id):
+                return {"message": "Job deleted successfully"}
+            else:
+                raise HTTPException(status_code=404)
+
+        @app.delete("/jobs/")
+        async def delete_all_jobs():
+            """Delete all jobs.
+
+            Returns:
+                Message
+
+            Raises:
+                HTTPException: If deletion fails
+            """
+            session = db.get_session()
+            if db.delete_all_jobs(session):
+                return {"message": "All jobs deleted successfully"}
+            else:
+                raise HTTPException(status_code=404)
+
+        @app.delete("/tasks/{task_hash_id}/jobs")
+        async def delete_task_jobs(task_hash_id: str):
+            """Delete all jobs for a specific task.
+
+            Args:
+                task_hash_id: Task ID
+
+            Returns:
+                Message
+            """
+            session = db.get_session()
+            if db.delete_jobs_by_task(session, task_hash_id):
+                return {"message": "All jobs for task deleted successfully"}
+            else:
+                raise HTTPException(status_code=404)
 
         @app.post("/tasks/{task_hash_id}/trigger", response_model=models.JobTriggerResponse)
         async def trigger_task(
@@ -224,7 +286,7 @@ class API:
             # Create a new job
             job = database.JobModel(
                 task_hash_id=task_hash_id,
-                trigger_time=datetime.utcnow(),
+                trigger_time=datetime.now(pytz.UTC),
                 status=models.JobStatus.PENDING
             )
             db_session.add(job)
@@ -333,7 +395,8 @@ class API:
 
             # Update job status to running using proper SQLAlchemy update
             job_id = int(job.id)
-            logfile = f"{self.log_dir}/{task_hash_id}/job_{job_id}.log"
+            task_dir = sanitize_filename(task.name.replace(" ", "_")).lower()
+            logfile = f"{self.log_dir}/{task_dir}/{datetime.now():%Y%m%d_%H%M%S}_{job.id}.log"
             if not os.path.exists(os.path.dirname(logfile)):
                 os.makedirs(os.path.dirname(logfile), exist_ok=True)
             
@@ -487,8 +550,52 @@ class API:
             if failed_jobs:
                 ## send alerts here
                 for job in failed_jobs:
-                    logging.error(f"Job with ID {job.id} has failed")
+                    task = db.get_task_by_id(db_session, job.task_hash_id)
+                    if task:
+                        logging.error(f"Task {task.name}'s job {job.id} failed")
+                        subject = f"Task {task.name}'s job {job.id} has failed"
+                    else:
+                        logging.error(f"Job {job.id} failed")
+                        subject = f"Job {job.id} has failed"
+                    
                     ## send email here
+                    if self.email_config:
+                        if task:
+                            
+                            email_contents = [
+                                f"### Task {task.name}'s job {job.id} has failed",
+                                f"### Task Config",
+                                pprint.pformat(models.model_to_dict(task), indent=4),
+                                f"### Error",
+                                job.error_message
+                            ]
+                        else:
+                            
+                            email_contents = [
+                                f"### Job {job.id} has failed",
+                                f"### Job Config",
+                                pprint.pformat(models.model_to_dict(job), indent=4),
+                                f"### Error",
+                                job.error_message
+                            ]
+
+                        send_email(
+                            from_address   = self.email_config.smtp_username,
+                            to_address     = self.email_config.email_recipients,
+                            subject        = subject,
+                            email_contents = email_contents,
+                            attachments    = {
+                                os.path.basename(job.log_file) : job.log_file
+                            },
+                            smtp_host     = self.email_config.smtp_server,
+                            smtp_port     = self.email_config.smtp_port,
+                            use_tls       = self.email_config.smtp_usetls,
+                            smtp_password = self.email_config.smtp_password
+                        )
+                    
+                    ## use customized method to send alert
+                    if self.send_alert_callable:
+                        self.send_alert_callable(subject, task, job)
 
     def run_api_in_thread(self):
         """Run the FastAPI application in a separate thread."""

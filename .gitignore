@@ -17,3 +17,6 @@ logs/
 .venv
 venv/
 ENV/
+
+# private config
+config_private.yaml

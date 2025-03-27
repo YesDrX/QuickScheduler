@@ -1,10 +1,10 @@
 import os
 import logging
-from typing import List
+from typing import Callable, List, Optional
 import time
 
 from quickScheduler.backend.api import API
-from quickScheduler.backend.models import TaskModel
+from quickScheduler.backend.models import TaskModel, EmailConfig
 from quickScheduler.backend.scheduler import Scheduler
 from quickScheduler.frontend.app import FrontEnd
 from quickScheduler.utils.yaml_config import YamlConfig
@@ -12,19 +12,37 @@ from quickScheduler.utils.triggers import TriggerType
 
 
 class QuickScheduler:
-    def __init__(self, config_file : str, tasks : List[TaskModel] = []):
+    def __init__(self, config_file : str, tasks : List[TaskModel] = [], send_alert_callable : Callable = None):
         self.config_file = config_file
         self.config = YamlConfig(config_file)
         self.tasks = tasks
+        self.send_alert_callable = send_alert_callable
         self.backend_api_host = self.config.get("backend_api_host", "127.0.0.1")
         self.backend_api_port = self.config.get("backend_api_port", 8000)
         self.backend_api_url = f"http://{self.backend_api_host}:{self.backend_api_port}"
+        self.email_config = self.parse_email_config()
     
+    def parse_email_config(self) -> Optional[EmailConfig]:
+        if "smtp_server" in self.config:
+            email_config = EmailConfig(
+                smtp_server   = self.config.get("smtp_server"),
+                smtp_port     = self.config.get("smtp_port", 587),
+                smtp_usetls   = self.config.get("smtp_usetls", True),
+                smtp_username = self.config.get("smtp_username", ""),
+                smtp_password = self.config.get("smtp_password", ""),
+                email_recipients = self.config.get("email_recipients", [
+                    self.config.get("email_recismtp_usernamepients", [])
+                ])
+            )
+            return email_config
+
     def start_api(self):
         self.api = API(
             host = self.backend_api_host,
             port = self.backend_api_port,
-            working_directory = self.config.get("data_dir", "~/.schedulerData/")
+            working_directory = self.config.get("data_dir", "~/.schedulerData/"),
+            email_config = self.email_config,
+            send_alert_callable = self.send_alert_callable
         )
         self.api_thread = self.api.run_api_in_thread()
     
@@ -41,7 +59,8 @@ class QuickScheduler:
         self.frontend = FrontEnd(
             host = self.config.get("frontend_host", "0.0.0.0"),
             port = self.config.get("frontend_port", 8001),
-            backend_api_url = self.backend_api_url
+            backend_api_url = self.backend_api_url,
+            config = self.config
         )
         self.frontend_thread = self.frontend.run_in_thread()
     

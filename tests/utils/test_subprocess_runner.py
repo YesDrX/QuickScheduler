@@ -13,7 +13,10 @@ from quickScheduler.utils.subprocess_runner import SubProcessRunner
 
 def test_simple_command():
     """Test running a simple shell command."""
-    runner = SubProcessRunner()
+    with tempfile.NamedTemporaryFile(delete=False) as temp:
+        log_file = temp.name
+
+    runner = SubProcessRunner(log_file)
     runner.start("echo 'test'")
     time.sleep(0.1)  # Give process time to complete
     status = runner.get_status()
@@ -21,32 +24,54 @@ def test_simple_command():
     assert status["exit_code"] == 0
     assert "test" in status["output"]
 
+    with open(log_file, 'r') as f:
+        log_content = f.read()
+        assert "command: echo 'test'" in log_content
+    os.unlink(log_file)
+
 def test_python_callable():
     """Test running a Python callable."""
-    def sample_function():
-        print("Hello from Python")
-        return
+    with tempfile.NamedTemporaryFile(delete=False) as temp:
+        log_file = temp.name
 
-    runner = SubProcessRunner()
-    runner.start(sample_function)
-    time.sleep(0.5)  # Increase sleep time to ensure process completion
-    status = runner.get_status()
-    assert not status["running"]
-    assert status["exit_code"] == 0
-    assert "Hello from Python" in status["output"]
+        def sample_function():
+            print("Hello from Python")
+            return
+
+        runner = SubProcessRunner(log_file)
+        runner.start(sample_function)
+        time.sleep(0.5)  # Increase sleep time to ensure process completion
+        status = runner.get_status()
+        assert not status["running"]
+        assert status["exit_code"] == 0
+
+        with open(log_file, 'r') as f:
+            log_content = f.read()
+            assert "Hello from Python" in log_content
 
 def test_environment_variables():
     """Test setting environment variables for shell commands."""
-    runner = SubProcessRunner()
+    with tempfile.NamedTemporaryFile(delete=False) as temp:
+        log_file = temp.name
+
+    runner = SubProcessRunner(log_file)
     env = {"TEST_VAR": "test_value"}
     runner.start("echo $TEST_VAR", env=env)
     time.sleep(0.1)  # Give process time to complete
     status = runner.get_status()
     assert "test_value" in status["output"]
 
+    with open(log_file, 'r') as f:
+        log_content = f.read()
+        assert "command: echo $TEST_VAR" in log_content
+    os.unlink(log_file)
+
 def test_process_lifecycle():
     """Test process lifecycle management (start/stop/status)."""
-    runner = SubProcessRunner()
+    with tempfile.NamedTemporaryFile(delete=False) as temp:
+        log_file = temp.name
+
+    runner = SubProcessRunner(log_file)
     runner.start("sleep 10")
     assert runner.is_running()
     
@@ -55,6 +80,11 @@ def test_process_lifecycle():
     
     status = runner.get_status()
     assert not status["running"]
+
+    with open(log_file, 'r') as f:
+        log_content = f.read()
+        assert "command: sleep 10" in log_content
+    os.unlink(log_file)
 
 def test_logging():
     """Test logging functionality."""
@@ -67,7 +97,7 @@ def test_logging():
 
     with open(log_file, 'r') as f:
         log_content = f.read()
-        assert "Starting shell command" in log_content
+        assert "echo 'test logging'" in log_content
 
     os.unlink(log_file)
 
@@ -91,7 +121,10 @@ def test_error_handling():
 
 def test_long_running_process():
     """Test handling of long-running processes."""
-    runner = SubProcessRunner()
+    with tempfile.NamedTemporaryFile(delete=False) as temp:
+        log_file = temp.name
+
+    runner = SubProcessRunner(log_file)
     runner.start("sleep 10")
     
     assert runner.is_running()
@@ -101,3 +134,8 @@ def test_long_running_process():
     
     runner.stop()
     assert not runner.is_running()
+
+    with open(log_file, 'r') as f:
+        log_content = f.read()
+        assert "command: sleep 10" in log_content
+    os.unlink(log_file)

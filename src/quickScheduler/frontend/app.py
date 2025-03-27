@@ -13,10 +13,13 @@ import httpx
 import pandas as pd
 import numpy as np
 import requests
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, HTTPException, Request, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from starlette.routing import request_response
+from starlette.middleware.sessions import SessionMiddleware
+from quickScheduler.frontend.auth import AuthMiddleware
 
 from quickScheduler.backend.system_stats import get_system_stats
 from quickScheduler.utils.datetime_utils import convert_to_local, get_local_timezone, parse_datetime
@@ -24,9 +27,10 @@ from quickScheduler.utils.triggers import TriggerType, build_trigger
 
 
 class FrontEnd:
-    def __init__(self, host : str = "0.0.0.0", port : int = 8001, backend_api_url: str = "http://localhost:8000"):
+    def __init__(self, host : str = "0.0.0.0", port : int = 8001, backend_api_url: str = "http://localhost:8000", config=None):
         self.host = host
         self.port = port
+        self.config = config
 
         # Create FastAPI application
         self.app = FastAPI(
@@ -35,8 +39,14 @@ class FrontEnd:
             version="1.0.0"
         )
 
-        # Setup templates
+        # Add middleware
+        self.auth_middleware = AuthMiddleware(app=None, config=self.config)
+        self.app.add_middleware(AuthMiddleware, config=self.config, instance=self.auth_middleware)
+        self.app.add_middleware(SessionMiddleware, secret_key=os.urandom(24))
+
+        # Setup templates and static files
         self.templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
+        self.app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
 
         # Add custom filters
         self.templates.env.filters["status_color"] = lambda status: {
@@ -50,10 +60,48 @@ class FrontEnd:
         self.register_endpoints(app=self.app, backend_api_url=backend_api_url)
 
     def register_endpoints(self, app : FastAPI, backend_api_url: str):
+        @app.get("/login", response_class=HTMLResponse)
+        async def login_page(request: Request):
+            """Render login page."""
+            return self.templates.TemplateResponse("login.html", {"request": request})
+
+        @app.post("/login")
+        async def login(request: Request, username: str = Form(...), password: str = Form(...)):
+            """Handle login form submission."""
+            # Access the auth middleware instance directly from the frontend class
+            auth_middleware = self.auth_middleware
+            
+            if not auth_middleware:
+                raise HTTPException(status_code=500, detail="Authentication middleware not configured")
+            
+            session_token = auth_middleware.validate_credentials(username, password)
+            if session_token:
+                response = RedirectResponse("/", status_code=303)
+                response.set_cookie(
+                    key="session", 
+                    value=session_token,
+                    httponly=True,
+                    samesite="lax",
+                    secure=False  # Set to True in production with HTTPS
+                )
+                return response
+            
+            return self.templates.TemplateResponse(
+                "login.html",
+                {"request": request, "error": "Invalid credentials"}
+            )
+
         @app.get("/", response_class=HTMLResponse)
         async def index(request: Request):
             """Render index page."""
             return self.templates.TemplateResponse("index.html", {"request": request})
+
+        @app.post("/logout")
+        async def logout(request: Request):
+            """Handle user logout by clearing session."""
+            response = RedirectResponse("/login", status_code=303)
+            response.delete_cookie("session")
+            return response
 
         @app.get("/system/stats")
         async def get_stats():
@@ -330,6 +378,33 @@ class FrontEnd:
                 response = await client.post(f"{backend_api_url}/tasks/{task_hash_id}/trigger")
                 if response.status_code == 404:
                     raise HTTPException(status_code=404, detail="Task not found")
+                return response.json()
+                
+        @app.delete("/jobs/{job_id}")
+        async def delete_job(request: Request, job_id: str):
+            """Delete a specific job."""
+            async with httpx.AsyncClient() as client:
+                response = await client.delete(f"{backend_api_url}/jobs/{job_id}")
+                if response.status_code != 200:
+                    raise HTTPException(status_code=400)
+                return response.json()
+                
+        @app.delete("/jobs")
+        async def delete_all_jobs(request: Request):
+            """Delete all jobs."""
+            async with httpx.AsyncClient() as client:
+                response = await client.delete(f"{backend_api_url}/jobs")
+                if response.status_code != 200:
+                    raise HTTPException(status_code=400)
+                return response.json()
+                
+        @app.delete("/tasks/{task_hash_id}/jobs")
+        async def delete_task_jobs(request: Request, task_hash_id: str):
+            """Delete all jobs for a specific task."""
+            async with httpx.AsyncClient() as client:
+                response = await client.delete(f"{backend_api_url}/tasks/{task_hash_id}/jobs")
+                if response.status_code != 200:
+                    raise HTTPException(status_code=400)
                 return response.json()
 
     def run(self):

@@ -7,7 +7,7 @@ when to run) and Jobs (which represent specific instances of task execution).
 
 import hashlib
 import json
-from sqlalchemy import Column, Integer, String, Text, JSON, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, JSON, DateTime, ForeignKey, true
 from sqlalchemy.orm import relationship, declarative_base, validates
 from sqlalchemy.inspection import inspect
 from datetime import datetime, timezone
@@ -56,7 +56,7 @@ class TaskModel(Base):
     callable_func = Column(String, nullable=True)
     working_directory = Column(String, nullable=True)
     schedule_type = Column(String)
-    schedule_config = Column(JSON)
+    schedule_config = Column(JSON, nullable=True)
     environment = Column(JSON, nullable=True)
     max_retries = Column(Integer, default=3)
     retry_delay = Column(Integer, default=60)  # seconds
@@ -165,7 +165,7 @@ class TaskBase(BaseModel):
     callable_func: Optional[str] = Field(None, description="Python callable to execute")
     working_directory: Optional[str] = Field(None, description="Working directory for command execution")
     schedule_type: TriggerType = Field(..., description="Type of scheduling for this task")
-    schedule_config: Dict[str, Any] = Field(
+    schedule_config: Optional[Dict[str, Any]] = Field(
         ...,
         description="Configuration for the schedule"
     )
@@ -255,3 +255,11 @@ class JobTriggerResponse(BaseModel):
     job_id: int
     message: str
 
+class EmailConfig(BaseModel):
+    """Model for email configuration."""
+    smtp_server: str
+    smtp_port: int
+    smtp_usetls: bool
+    smtp_username: str
+    smtp_password: str
+    email_recipients: list[str]

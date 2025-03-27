@@ -160,3 +160,87 @@ class Database:
             List of jobs for the specified task
         """
         return session.query(JobModel).filter(JobModel.task_hash_id == task_hash_id).order_by(desc(JobModel.end_time)).offset(skip).limit(limit).all()
+
+    def delete_job(self, session: Session, job_id: int) -> bool:
+        """Delete a single job by its ID.
+
+        Args:
+            session: Database session
+            job_id: ID of the job to delete
+
+        Returns:
+            True if job was deleted, False if not found
+        """
+        job = self.get_job_by_id(session, job_id)
+        if job:
+            session.delete(job)
+            session.commit()
+            return True
+        return False
+
+    def delete_all_jobs(self, session: Session) -> int:
+        """Delete all jobs from the database.
+
+        Args:
+            session: Database session
+
+        Returns:
+            Number of jobs deleted
+        """
+        deleted_count = session.query(JobModel).delete()
+        session.commit()
+        return deleted_count
+
+    def delete_jobs_by_task(self, session: Session, task_hash_id: str) -> int:
+        """Delete all jobs for a specific task.
+
+        Args:
+            session: Database session
+            task_hash_id: ID of the task whose jobs should be deleted
+
+        Returns:
+            Number of jobs deleted
+        """
+        deleted_count = session.query(JobModel).filter(JobModel.task_hash_id == task_hash_id).delete()
+        session.commit()
+        return deleted_count
+
+    def delete_task(self, session: Session, task_hash_id: str) -> bool:
+        """Delete a task and all its associated jobs.
+
+        Args:
+            session: Database session
+            task_hash_id: ID of the task to delete
+
+        Returns:
+            True if task was deleted, False if not found
+        """
+        task = self.get_task_by_id(session, task_hash_id)
+        if task:
+            self.delete_jobs_by_task(session, task_hash_id)
+            session.delete(task)
+            session.commit()
+            return True
+        return False
+        
+    def count_tasks(self, session: Session) -> int:
+        """Count all tasks in the database.
+
+        Args:
+            session: Database session
+
+        Returns:
+            Total number of tasks
+        """
+        return session.query(TaskModel).count()
+        
+    def count_jobs(self, session: Session) -> int:
+        """Count all jobs in the database.
+
+        Args:
+            session: Database session
+
+        Returns:
+            Total number of jobs
+        """
+        return session.query(JobModel).count()

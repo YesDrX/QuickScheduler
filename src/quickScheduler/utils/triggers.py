@@ -99,7 +99,7 @@ class TriggerConfig(BaseModel):
         return rst
 
 class BaseTrigger(ABC):
-    def __init__(self, trigger_type: TriggerType, config: TriggerConfig):
+    def __init__(self, trigger_type: TriggerType, config: Optional[TriggerConfig]):
         self.trigger_type = trigger_type
         self.config = config
         self._validate_config()
@@ -145,7 +145,7 @@ class BaseTrigger(ABC):
 class ImmediateTrigger(BaseTrigger):
     """A trigger that fires immediately, but only once"""
     
-    def __init__(self, trigger_type: TriggerType, config: TriggerConfig):
+    def __init__(self, trigger_type: TriggerType, config: Optional[TriggerConfig]):
         super().__init__(trigger_type, config)
         self._has_triggered = False
     
@@ -293,12 +293,14 @@ class IntervalTrigger(BaseTrigger):
         # If no valid time found within a year, return None
         return None
 
-def build_trigger(trigger_type : Any, trigger_config : Dict):
+def build_trigger(trigger_type : Any, trigger_config : Optional[Dict] = None):
     if str(trigger_type).lower() == TriggerType.IMMEDIATE:
-        return ImmediateTrigger(TriggerType.IMMEDIATE, TriggerConfig(**trigger_config))
+        return ImmediateTrigger(TriggerType.IMMEDIATE, None)
     elif str(trigger_type).lower() == TriggerType.DAILY:
+        assert trigger_config is not None, f"trigger_config must be provided for trigger type {trigger_type}"
         return DailyTrigger(TriggerType.DAILY, TriggerConfig(**trigger_config))
     elif str(trigger_type).lower() == TriggerType.INTERVAL:
+        assert trigger_config is not None, f"trigger_config must be provided for trigger type {trigger_type}"
         return IntervalTrigger(TriggerType.INTERVAL, TriggerConfig(**trigger_config))
     else:
         raise ValueError(f"Unknown trigger type: {trigger_type}")

@@ -52,6 +52,7 @@ def _run_python_callable(serialized_func, conn, log_file):
         
         except Exception as e:
             conn.send((False, str(e)))
+            raise
         
         finally:
             sys.stdout = sys.__stdout__
@@ -66,15 +67,16 @@ class SubProcessRunner:
     - Control process lifecycle (start, stop, check status)
     """
 
-    def __init__(self, log_file: str):
+    def __init__(self, log_file: str = None):
         """Initialize the SubProcessRunner.
 
         Args:
             log_file: Optional path to the log file. If not provided,
-                     logging will be directed to stdout.
+                     a temporary file will be created.
         """
         self.process: Optional[subprocess.Popen] = None
-        self.log_file = log_file
+        self.log_file = log_file or tempfile.mktemp(prefix='subprocess_runner_')
+        self.logger = logging.getLogger(__name__)
 
     def start(self, 
               target: Union[Callable, str], 
@@ -148,7 +150,6 @@ class SubProcessRunner:
         if not self.is_running():
             raise ValueError("No process is running")
 
-        self.logger.info("Stopping process")
         self.process.terminate()
         try:
             self.process.wait(timeout=5)  # Wait up to 5 seconds for graceful termination
@@ -196,7 +197,9 @@ class SubProcessRunner:
                 # Get output and error if available
                 try:
                     output, error = self.process.communicate(timeout=0.1)
-                    status["output"] = output
+                    # Read log file contents
+                    with open(self.log_file, 'r') as f:
+                        status["output"] = f.read()
                     status["error"] = error
                 except subprocess.TimeoutExpired:
                     # Process still running, don't consume output yet
