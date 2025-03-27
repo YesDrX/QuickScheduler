@@ -3,7 +3,7 @@ import logging
 import pprint
 from pathlib import Path
 from quickScheduler import QuickScheduler
-from quickScheduler.backend.models import TaskModel, GlobalCallableFunctions, JobModel, model_to_dict
+from quickScheduler.backend.models import TaskModel, JobModel, model_to_dict, createTaskModel
 from quickScheduler.utils.triggers import TriggerType
 
 """
@@ -35,7 +35,7 @@ Tasks can be defined programmably in code, or loaded from yaml config files.
 # Example programmatic tasks
 def create_example_tasks():
     return [
-        TaskModel(
+        createTaskModel(
             name="Memory Monitor",
             description="Monitor system memory usage and alert if above threshold",
             schedule_type=TriggerType.DAILY,
@@ -44,8 +44,8 @@ def create_example_tasks():
                 "timezone" : "America/New_York"
             },
             command="free -h"
-        ).calculate_hash_id(),
-        TaskModel(
+        ),
+        createTaskModel(
             name="Hello World",
             description="Print 'Hello World!' to the console",
             schedule_type=TriggerType.DAILY,
@@ -53,14 +53,14 @@ def create_example_tasks():
                 "run_time" : "12:00",
                 "timezone" : "America/New_York"
             },
-            callable_func = GlobalCallableFunctions.register_function(example_worker)
-        ).calculate_hash_id(),
-        TaskModel(
+            callable_func = example_worker
+        ),
+        createTaskModel(
             name="Job to fail",
             description="Print 'Hello World!' to the console",
             schedule_type=TriggerType.IMMEDIATE,
-            callable_func = GlobalCallableFunctions.register_function(example_failing_worker)
-        ).calculate_hash_id()
+            callable_func = example_failing_worker
+        )
     ]
 
 async def main():

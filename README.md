@@ -54,10 +54,10 @@ command: curl -f http://localhost:8000/health
 Or create tasks programmatically:
 
 ```python
-from quickScheduler.backend.models import TaskModel, GlobalCallableFunctions
+from quickScheduler.backend.models import TaskModel, createTaskModel
 from quickScheduler.utils.triggers import TriggerType
 
-task1 = TaskModel(
+task1 = createTaskModel(
     name="Memory Monitor",
     description="Monitor system memory usage",
     schedule_type=TriggerType.DAILY,
@@ -66,7 +66,7 @@ task1 = TaskModel(
         "timezone": "America/New_York"
     },
     command="free -h"
-).calculate_hash_id()
+)
 
 """
 A task could be a python callable
@@ -74,12 +74,12 @@ A task could be a python callable
 def example_worker():
     print("Hello World!")
 
-task2 = TaskModel(
+task2 = createTaskModel(
             name="Job to fail",
             description="Print 'Hello World!' to the console",
             schedule_type=TriggerType.IMMEDIATE,
-            callable_func = GlobalCallableFunctions.register_function(example_worker)
-        ).calculate_hash_id()
+            callable_func = example_worker
+        )
 
 
 from quickScheduler import QuickScheduler

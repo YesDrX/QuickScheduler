@@ -263,3 +263,9 @@ class EmailConfig(BaseModel):
     smtp_username: str
     smtp_password: str
     email_recipients: list[str]
+
+def createTaskModel(callable_func : Callable = None, **kwargs):
+    if callable_func is not None:
+        return TaskModel(callable_func=callable_func, **kwargs).calculate_hash_id()
+    else:
+        return TaskModel(**kwargs).calculate_hash_id()
