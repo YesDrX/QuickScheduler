@@ -13,6 +13,9 @@ frontend_port : 8001
 auth_username: admin
 auth_password: admin # 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
 
+# Url
+url_prefix: http://127.0.0.1:8001/
+
 # Email
 smtp_server: smtp.gmail.com
 smtp_port: 587

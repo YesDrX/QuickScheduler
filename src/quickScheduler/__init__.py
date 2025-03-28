@@ -20,6 +20,9 @@ class QuickScheduler:
         self.backend_api_host = self.config.get("backend_api_host", "127.0.0.1")
         self.backend_api_port = self.config.get("backend_api_port", 8000)
         self.backend_api_url = f"http://{self.backend_api_host}:{self.backend_api_port}"
+        self.frontend_host = self.config.get("frontend_host", "0.0.0.0")
+        self.frontend_port = self.config.get("frontend_port", 8001)
+        self.url_prefix = self.config.get("url_prefix", f"http://{self.frontend_host}:{self.frontend_port}")
         self.email_config = self.parse_email_config()
     
     def parse_email_config(self) -> Optional[EmailConfig]:
@@ -42,7 +45,8 @@ class QuickScheduler:
             port = self.backend_api_port,
             working_directory = self.config.get("data_dir", "~/.schedulerData/"),
             email_config = self.email_config,
-            send_alert_callable = self.send_alert_callable
+            send_alert_callable = self.send_alert_callable,
+            url_prefix = self.url_prefix
         )
         self.api_thread = self.api.run_api_in_thread()
     
@@ -57,8 +61,8 @@ class QuickScheduler:
     
     def start_frontend(self):
         self.frontend = FrontEnd(
-            host = self.config.get("frontend_host", "0.0.0.0"),
-            port = self.config.get("frontend_port", 8001),
+            host = self.frontend_host,
+            port = self.frontend_port,
             backend_api_url = self.backend_api_url,
             config = self.config
         )

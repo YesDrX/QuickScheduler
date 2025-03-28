@@ -37,7 +37,8 @@ class API:
             port: int = 8000,
             working_directory: str = ".",
             email_config : Optional[models.EmailConfig] = None,
-            send_alert_callable : Optional[Callable] = None
+            send_alert_callable : Optional[Callable] = None,
+            url_prefix : Optional[str] = None
         ):
         """
         Initialize the API server.
@@ -60,6 +61,7 @@ class API:
         self.send_alert_callable = send_alert_callable
         self.thread = None
         self.log_dir = os.path.join(self.working_directory, "logs")
+        self.url_prefix = url_prefix
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir, exist_ok=True)
 
@@ -581,6 +583,10 @@ class API:
                                 f"### Error",
                                 job.error_message
                             ]
+                        if self.url_prefix:
+                            email_contents = [
+                                f"[Failed Job]({self.url_prefix}/{job.task_hash_id}/jobs/{job.id})"
+                            ] + email_contents
 
                         send_email(
                             from_address   = self.email_config.smtp_username,
