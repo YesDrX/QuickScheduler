@@ -585,7 +585,7 @@ class API:
                             ]
                         if self.url_prefix:
                             email_contents = [
-                                f"[Failed Job]({self.url_prefix}/{job.task_hash_id}/jobs/{job.id})"
+                                f"[Failed Job]({self.url_prefix}/tasks/{job.task_hash_id}/jobs/{job.id})"
                             ] + email_contents
 
                         send_email(

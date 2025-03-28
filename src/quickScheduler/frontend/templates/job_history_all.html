@@ -58,6 +58,9 @@
                         <a href="/tasks/{{ job.task_hash_id }}/jobs/{{ job.id }}/log" class="btn btn-sm btn-secondary" title="View Log">
                             <i class="bi bi-file-text"></i>
                         </a>
+                        <a onclick="triggerTask('{{ job.task_hash_id }}')" class="btn btn-sm btn-success" title="Run Task">
+                            <i class="bi bi-play-fill"></i>
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -85,6 +88,22 @@
 {% endif %}
 
 <script>
+function triggerTask(taskId) {
+    if (!confirm('Are you sure you want to run this task now?')) return;
+
+    fetch(`/tasks/${taskId}/trigger`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Task triggered successfully!');
+        window.location.href = `/tasks/${taskId}/jobs/${data.job_id}`;
+    })
+    .catch(error => {
+        alert('Error triggering task: ' + error);
+    });
+}
+
 function searchJobs() {
     const searchTerm = document.getElementById('taskSearch').value.toLowerCase();
     const rows = document.querySelectorAll('tbody tr');
