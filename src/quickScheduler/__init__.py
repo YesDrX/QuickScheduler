@@ -22,7 +22,7 @@ class QuickScheduler:
         self.backend_api_url = f"http://{self.backend_api_host}:{self.backend_api_port}"
         self.frontend_host = self.config.get("frontend_host", "0.0.0.0")
         self.frontend_port = self.config.get("frontend_port", 8001)
-        self.url_prefix = self.config.get("url_prefix", f"http://{self.frontend_host}:{self.frontend_port}")
+        self.url_prefix = self.config.get("url_prefix", f"http://{self.frontend_host}:{self.frontend_port}").strip().rstrip("/")
         self.email_config = self.parse_email_config()
     
     def parse_email_config(self) -> Optional[EmailConfig]:
