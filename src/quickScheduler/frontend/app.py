@@ -46,7 +46,7 @@ class FrontEnd:
 
         # Setup templates and static files
         self.templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
-        self.app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
+        # self.app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
 
         # Add custom filters
         self.templates.env.filters["status_color"] = lambda status: {
