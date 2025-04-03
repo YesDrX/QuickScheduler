@@ -14,6 +14,7 @@ import subprocess
 import dill
 import socket
 import getpass
+import threading
 from typing import Optional, Union, Callable, Dict, Any
 from pathlib import Path
 
@@ -74,19 +75,21 @@ class SubProcessRunner:
             log_file: Optional path to the log file. If not provided,
                      a temporary file will be created.
         """
+        self._thread: Optional[threading.Thread] = None
         self.process: Optional[subprocess.Popen] = None
         self.log_file = log_file or tempfile.mktemp(prefix='subprocess_runner_')
         self.logger = logging.getLogger(__name__)
 
-    def start(self, 
-              target: Union[Callable, str], 
-              env: Optional[Dict[str, str]] = None,
-              shell: bool = False,
-              **kwargs: Any) -> None:
-        """Start a subprocess with the given target.
+    def _run(self, 
+            target: Union[Callable, str, list[str]], 
+            env: Optional[Dict[str, str]] = None,
+            shell: bool = False,
+            **kwargs: Any) -> None:
+        """Run a subprocess with the given target in a blocking way.
 
         Args:
-            target: Either a Python callable or a shell command string
+            target: Either a Python callable, a shell command string, or a list of shell commands
+                   If a list is provided, commands will be executed sequentially
             env: Optional dictionary of environment variables
             shell: Whether to run the command in a shell (default: False)
             **kwargs: Additional arguments to pass to subprocess.Popen
@@ -95,12 +98,23 @@ class SubProcessRunner:
             ValueError: If process is already running
             TypeError: If target type is invalid
         """
-        if self.is_running():
-            raise ValueError("Process is already running")
+
+        if isinstance(target, list):
+            # For list of shell commands, run them sequentially
+            for cmd in target:
+                if not isinstance(cmd, str):
+                    raise TypeError("All commands in the list must be strings")
+                self._run(cmd, env=env, shell=True, **kwargs)
+                status = self.get_status()
+                exit_code = status["exit_code"]
+                if exit_code != 0:
+                    logging.error(f"Command failed: {cmd}\nExit Code={exit_code}\nStatus={status}")
+                    break
+            return
 
         if isinstance(target, str):
             # For shell commands
-            with open(self.log_file, 'w') as log_file:
+            with open(self.log_file, 'a') as log_file:
                 log_file.write(SCHEDULER_LOG_DIVIDER)
                 log_file.write(f"hostname: {socket.gethostname()}\n")
                 log_file.write(f"username: {getpass.getuser()}\n")
@@ -122,6 +136,7 @@ class SubProcessRunner:
                     text=True,
                     **kwargs
                 )
+                self.process.wait()
         
         elif callable(target):
             # For Python callables
@@ -138,8 +153,61 @@ class SubProcessRunner:
             p.start()
             self.process = p
             self.conn = parent_conn
+            self.process.join()
         else:
             raise TypeError("Target must be either a callable or a string command")
+
+    def start(self,
+                    target: Union[Callable, str, list[str]],
+                    env: Optional[Dict[str, str]] = None,
+                    shell: bool = False,
+                    **kwargs: Any) -> None:
+        """Run a subprocess with the given target in a non-blocking way using a thread.
+
+        Args:
+            target: Either a Python callable, a shell command string, or a list of shell commands
+                   If a list is provided, commands will be executed sequentially
+            env: Optional dictionary of environment variables
+            shell: Whether to run the command in a shell (default: False)
+            **kwargs: Additional arguments to pass to subprocess.Popen
+
+        Raises:
+            ValueError: If process is already running
+            TypeError: If target type is invalid
+        """
+        if self._thread is not None:
+            raise ValueError("Process is already running")
+
+        self._thread = threading.Thread(
+            target=self._run,
+            args=(target,),
+            kwargs={"env": env, "shell": shell, **kwargs},
+            daemon=True
+        )
+        self._thread.start()
+
+    def is_process_running(self) -> bool:
+        """Check if the process is currently running.
+        Returns:
+            bool: True if process is running, False otherwise
+        """
+        if self.process:
+            if isinstance(self.process, subprocess.Popen):
+                return self.process.poll() is None
+            else:
+                return self.process.is_alive()
+        return False
+
+    def is_running(self) -> bool:
+        """Check if the process is currently running.
+
+        Returns:
+            bool: True if process is running, False otherwise
+        """
+        if self._thread is not None:
+            if self._thread.is_alive():
+                return True
+        return False
 
     def stop(self) -> None:
         """Stop the currently running process.
@@ -149,28 +217,32 @@ class SubProcessRunner:
         """
         if not self.is_running():
             raise ValueError("No process is running")
+        
+        if self.process is not None:
+            if isinstance(self.process, subprocess.Popen):
+                self.process.terminate()
+                try:
+                    self.process.wait(timeout=5)  # Wait up to 5 seconds for graceful termination
+                except subprocess.TimeoutExpired:
+                    self.logger.warning("Process did not terminate gracefully, forcing...")
+                    self.process.kill()
+                    self.process.wait()
+            else: # multiprocessing.Process
+                if self.process.is_alive():
+                    self.process.terminate()
+                    try:
+                        self.process.join(timeout=5)  # Wait up to 5 seconds for graceful termination
+                    except subprocess.TimeoutExpired:
+                        self.logger.warning("Process did not terminate gracefully, forcing...")
+                        self.process.terminate()
+                        self.process.join()
+            self.process = None
 
-        self.process.terminate()
-        try:
-            self.process.wait(timeout=5)  # Wait up to 5 seconds for graceful termination
-        except subprocess.TimeoutExpired:
-            self.logger.warning("Process did not terminate gracefully, forcing...")
-            self.process.kill()
-            self.process.wait()
-
-        self.process = None
-
-    def is_running(self) -> bool:
-        """Check if the process is currently running.
-
-        Returns:
-            bool: True if process is running, False otherwise
-        """
-        if self.process is None:
-            return False
-        if isinstance(self.process, subprocess.Popen):
-            return self.process.poll() is None
-        return self.process.is_alive()
+        if self._thread is not None:
+            if self._thread.is_alive():
+                self._thread._stop()
+                self._thread.join()
+            self._thread = None
 
     def get_status(self) -> Dict[str, Any]:
         """Get the current status of the process.
@@ -191,7 +263,7 @@ class SubProcessRunner:
 
         if self.process:
             if isinstance(self.process, subprocess.Popen):
-                if not self.is_running():
+                if not self.is_process_running():
                     status["exit_code"] = self.process.returncode
 
                 # Get output and error if available
@@ -205,7 +277,7 @@ class SubProcessRunner:
                     # Process still running, don't consume output yet
                     pass
             else:  # multiprocessing.Process
-                if not self.is_running():
+                if not self.is_process_running():
                     status["exit_code"] = 0 if self.process.exitcode == 0 else 1
                 if hasattr(self, 'conn'):
                     if self.conn.poll():

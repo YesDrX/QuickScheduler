@@ -49,6 +49,15 @@ class QuickScheduler:
             url_prefix = self.url_prefix
         )
         self.api_thread = self.api.run_api_in_thread()
+        trial = 0
+        while trial < 5:
+            if not self.api_thread.is_alive():
+                logging.info("API server not ready, retrying...")
+                trial += 1
+                time.sleep(1)
+            else:
+                return
+        raise Exception("API server not ready")
     
     def start_scheduler(self):
         self.scheduler = Scheduler(
@@ -58,7 +67,16 @@ class QuickScheduler:
             backend_api_url = self.backend_api_url
         )
         self.scheduler_thread = self.scheduler.run_in_thread()
-    
+        trial = 0
+        while trial < 5:
+            if not self.scheduler_thread.is_alive():
+                logging.info("Scheduler not ready, retrying...")
+                trial += 1
+                time.sleep(1)
+            else:
+                return
+        raise Exception("Scheduler not ready")
+
     def start_frontend(self):
         self.frontend = FrontEnd(
             host = self.frontend_host,
@@ -67,7 +85,16 @@ class QuickScheduler:
             config = self.config
         )
         self.frontend_thread = self.frontend.run_in_thread()
-    
+        trial = 0
+        while trial < 5:
+            if not self.frontend_thread.is_alive():
+                logging.info("Frontend not ready, retrying...")
+                trial += 1
+                time.sleep(1)
+            else:
+                return
+        raise Exception("Frontend not ready")
+
     def run(self):
         self.start_api()
         self.start_scheduler()

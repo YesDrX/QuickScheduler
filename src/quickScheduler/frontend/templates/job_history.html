@@ -48,7 +48,7 @@
             <tr>
                 <td>{{ job.id }}</td>
                 <td>
-                    <span class="badge bg-{{ 'success' if job.status == 'completed' else 'danger' }}">
+                    <span class="badge bg-{{ 'success' if job.status == 'completed' else ('info' if job.status == 'running' else 'danger') }}">
                         {{ job.status }}
                     </span>
                 </td>

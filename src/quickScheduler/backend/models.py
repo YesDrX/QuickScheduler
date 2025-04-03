@@ -52,7 +52,18 @@ class TaskModel(Base):
     hash_id = Column(String, unique=True, index=True)
     name = Column(String, index=True)
     description = Column(Text, nullable=True)
-    command = Column(String, nullable=True)
+    command = Column(JSON, nullable=True)
+
+    @validates('command')
+    def validate_command(self, key, value):
+        """Validate command can be either str or list[str]."""
+        if value is None:
+            return value
+        if isinstance(value, str):
+            return value
+        if isinstance(value, list) and all(isinstance(x, str) for x in value):
+            return value
+        raise ValueError("command must be either a string or a list of strings")
     callable_func = Column(String, nullable=True)
     working_directory = Column(String, nullable=True)
     schedule_type = Column(String)
@@ -161,7 +172,7 @@ class TaskBase(BaseModel):
     """Base model for task data."""
     name: str = Field(..., description="Name of the task")
     description: Optional[str] = Field(None, description="Optional description of the task")
-    command: Optional[str] = Field(None, description="Command to execute")
+    command: Optional[str | list[str]] = Field(None, description="Command to execute (either a string or a list of strings)")
     callable_func: Optional[str] = Field(None, description="Python callable to execute")
     working_directory: Optional[str] = Field(None, description="Working directory for command execution")
     schedule_type: TriggerType = Field(..., description="Type of scheduling for this task")

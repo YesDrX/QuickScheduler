@@ -6,7 +6,7 @@ using Jinja2 templates and integrates with the backend API.
 import logging
 import os
 import threading
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -142,7 +142,8 @@ class FrontEnd:
                         "start_time" : convert_to_local(parse_datetime(job["start_time"]), get_local_timezone()),
                         "end_time"   : convert_to_local(parse_datetime(job["end_time"]), get_local_timezone())
                     }
-                    rst["duration"] = np.round((rst["end_time"] - rst["start_time"]).total_seconds(), 2)
+                    if rst["start_time"] and rst["end_time"]:
+                        rst["duration"] = np.round((rst["end_time"] - rst["start_time"]).total_seconds(), 2)
 
                     return rst
                 
@@ -167,7 +168,7 @@ class FrontEnd:
             total_pages = (total_jobs + limit - 1) // limit
             return self.templates.TemplateResponse("job_history_all.html", {
                 "request": request,
-                "jobs": sorted(jobs, key=lambda job: job['end_time'], reverse = True),
+                "jobs": sorted(jobs, key=lambda job: job['end_time'] if job["end_time"] else datetime.now(timezone.utc), reverse = True),
                 "current_page": page,
                 "total_pages": total_pages
             })
@@ -263,7 +264,8 @@ class FrontEnd:
                         "start_time" : convert_to_local(parse_datetime(job["start_time"]), get_local_timezone()),
                         "end_time"   : convert_to_local(parse_datetime(job["end_time"]), get_local_timezone())
                     }
-                    rst["duration"] = np.round((rst["end_time"] - rst["start_time"]).total_seconds(), 2)
+                    if rst["start_time"] and rst["end_time"]:
+                        rst["duration"] = np.round((rst["end_time"] - rst["start_time"]).total_seconds(), 2)
 
                     return rst
                 jobs = [
@@ -279,7 +281,7 @@ class FrontEnd:
             return self.templates.TemplateResponse("job_history.html", {
                 "request": request,
                 "task": task,
-                "jobs": sorted(jobs, key=lambda job: job['end_time'], reverse = True),
+                "jobs": sorted(jobs, key=lambda job: job['end_time'] if job["end_time"] else datetime.now(timezone.utc), reverse = True),
                 "current_page": page,
                 "total_pages": total_pages
             })

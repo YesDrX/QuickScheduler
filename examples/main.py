@@ -60,6 +60,12 @@ def create_example_tasks():
             description="Print 'Hello World!' to the console",
             schedule_type=TriggerType.IMMEDIATE,
             callable_func = example_failing_worker
+        ),
+        createTaskModel(
+            name="Multiple commands task",
+            description="Run multiple commands in sequence",
+            schedule_type=TriggerType.IMMEDIATE,
+            command=["echo 'Hello World!'", "echo 'Goodbye World!'"]
         )
     ]
 

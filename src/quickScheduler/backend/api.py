@@ -420,7 +420,7 @@ class API:
                 # Execute the command
                 if task_command is not None:
                     runner.start(
-                        target=str(task_command),
+                        target=task_command,
                         env=dict(task_environment),
                         cwd=str(task_working_directory),
                         shell=True

@@ -21,6 +21,7 @@ def parse_time(time_str : str, format : Optional[list[str]] = None) -> time:
     Raises:
         ValueError: If time_str cannot be parsed with any format
     """
+    if not isinstance(time_str, str): return 
     if format is None:
         format = [
             "%H:%M:%S",  # 13:45:30
@@ -37,6 +38,7 @@ def parse_time(time_str : str, format : Optional[list[str]] = None) -> time:
 
 def parse_timedelta(timedelta_str: str) -> timedelta:
     """Parse a timedelta string."""
+    if not isinstance(timedelta_str, str): return
     parts = timedelta_str.split(":")
     if len(parts) == 3:
         hours, minutes, seconds = map(float, parts)
@@ -64,6 +66,7 @@ def parse_datetime(datetime_str: str, formats: Optional[list[str]] = None) -> da
     Raises:
         ValueError: If datetime_str cannot be parsed with any format
     """
+    if not isinstance(datetime_str, str): return
     if formats is None:
         formats = [
             "%Y-%m-%d %H:%M:%S",  # 2023-12-25 13:45:30
@@ -95,6 +98,7 @@ def parse_date(date_str : str, formats : Optional[list[str]] = None) -> date:
     Raises:
         ValueError: If date_str cannot be parsed with any format
     """
+    if not isinstance(date_str, str): return
     if formats is None:
         formats = [
             "%Y-%m-%d",  # 2023-12-25
@@ -122,8 +126,8 @@ def convert_to_local(dt: Union[datetime, str], timezone: str = "UTC") -> datetim
         pytz.exceptions.UnknownTimeZoneError: If timezone name is invalid
         ValueError: If dt is a string and cannot be parsed
     """
-    if isinstance(dt, str):
-        dt = parse_datetime(dt)
+    if isinstance(dt, str): dt = parse_datetime(dt)
+    if dt is None: return
         
     # If datetime is naive, assume it's UTC
     if dt.tzinfo is None:

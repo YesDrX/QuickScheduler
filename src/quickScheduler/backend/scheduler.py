@@ -137,7 +137,7 @@ class Scheduler:
         logging.info(f"Executing task {task.hash_id}: {task.name}")
         # Add your task execution logic here
         response = requests.post(f"{self.backend_api_url}/tasks/{task.hash_id}/trigger")
-        if response.status_code == 404:
+        if response.status_code != 200:
             logging.error(f"failed to trigger task {task.hash_id} : {task.name}")
         else:
             logging.info(f"successfully triggered task {task.hash_id} : {task.name}")
