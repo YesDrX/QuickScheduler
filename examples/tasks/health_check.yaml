@@ -4,7 +4,7 @@ schedule_type: interval
 schedule_config:
   start_time: 9:00
   end_time: 17:00
-  interval: 60
+  interval: 65
   timezone: America/New_York
   calendar_file: ${PROJECT_DIR}/examples/calendars/all_days.txt
 command: curl -f http://localhost:8000/health

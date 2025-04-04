@@ -51,6 +51,7 @@ class TaskModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     hash_id = Column(String, unique=True, index=True)
     name = Column(String, index=True)
+    label = Column(String, nullable=True)
     description = Column(Text, nullable=True)
     command = Column(JSON, nullable=True)
 
@@ -171,6 +172,7 @@ class JobStatus(str, Enum):
 class TaskBase(BaseModel):
     """Base model for task data."""
     name: str = Field(..., description="Name of the task")
+    label : Optional[str] = Field(None, description="Optional label for the task")
     description: Optional[str] = Field(None, description="Optional description of the task")
     command: Optional[str | list[str]] = Field(None, description="Command to execute (either a string or a list of strings)")
     callable_func: Optional[str] = Field(None, description="Python callable to execute")

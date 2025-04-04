@@ -163,7 +163,7 @@ class YamlConfig:
             if file_path.exists() and file_path.stat().st_mtime > last_mtime:
                 return True
         return False
-        
+    
     def has_config_file_changed(self) -> bool:
         """Check if the main configuration file has changed since it was last loaded.
 
