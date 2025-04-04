@@ -138,7 +138,7 @@ class JobModel(Base):
     __tablename__ = 'jobs'
 
     id = Column(Integer, primary_key=True, index=True)
-    task_hash_id = Column(String, ForeignKey('tasks.hash_id'))
+    task_hash_id = Column(String, ForeignKey('tasks.hash_id'), nullable=True)
     trigger_time = Column(DateTime)
     start_time = Column(DateTime, nullable=True)
     end_time = Column(DateTime, nullable=True)
@@ -219,7 +219,7 @@ class TaskUpdate(BaseModel):
 
 class JobBase(BaseModel):
     """Base model for job data."""
-    task_hash_id: str = Field(..., description="ID of the associated task")
+    task_hash_id: Optional[str] = Field(..., description="ID of the associated task")
     trigger_time: datetime = Field(
         default_factory=datetime.utcnow,
         description="Time when the job was triggered"

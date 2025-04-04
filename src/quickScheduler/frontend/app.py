@@ -223,6 +223,17 @@ class FrontEnd:
                     if max(name_ratio, command_ratio, id_ratio) > 60:  # Threshold for fuzzy matching
                         filtered_tasks.append(task)
                 tasks = filtered_tasks
+            
+            tasks = sorted(
+                tasks,
+                key = lambda task: (
+                    pd.to_datetime(task["next_run_time"])
+                    if "next_run_time" in task and task["next_run_time"] is not None
+                    else datetime(1970, 1, 1)
+                ),
+                reverse = True
+            )
+
             return self.templates.TemplateResponse("tasks.html", {"request": request, "tasks": tasks})
 
         @app.get("/tasks/{task_hash_id}", response_class=HTMLResponse)
