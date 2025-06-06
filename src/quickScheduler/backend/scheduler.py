@@ -114,11 +114,15 @@ class Scheduler:
         for yaml_file in top_level_configs + sub_folder_configs:
             if yaml_file not in self.yaml_tasks and yaml_file not in self.yaml_configs:
                 logging.info(f"[Scheduler] adding task from {yaml_file}")
+                if yaml_file in top_level_configs:
+                    task_label = ""
+                else:
+                    task_label = os.path.basename(str(yaml_file.parent))
                 try:
                     config = YamlConfig(yaml_file)
                     task_data = config.config_data
                     if isinstance(task_data, dict):
-                        task = TaskModel(label = "", **task_data).calculate_hash_id()
+                        task = TaskModel(label = task_label, **task_data).calculate_hash_id()
                         self.yaml_tasks[yaml_file] = task
                         self.yaml_configs[yaml_file] = config
                         any_reloded = True

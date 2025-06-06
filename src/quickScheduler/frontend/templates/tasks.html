@@ -19,6 +19,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Label</th>
                 <th>Command</th>
                 <th>Next Run</th>
                 <th>Last Run</th>
@@ -30,6 +31,7 @@
             {% for task in tasks %}
             <tr>
                 <td>{{ task.name }}</td>
+                <td>{{ task.label }}</td>
                 <td><code>{{ task.command }}</code></td>
                 <td>{{ task.next_run_time or 'Not scheduled' }}</td>
                 <td>{{ task.previous_run_time or 'Never' }}</td>
